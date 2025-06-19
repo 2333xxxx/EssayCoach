@@ -6,7 +6,7 @@ in
 pkgs.mkShellNoCC {
   packages = with pkgs; [
     # Frontend Development (Vue.js 3 + Vite)
-    vite                        # Modern build tool (replaces Vue CLI)
+    # Note: Vite will be installed via pnpm when creating Vue projects
     nodejs_22                   # LTS version (recommended for production)
     #nodePackages.npm           # npm is not used in this project
     nodePackages.pnpm           # Alternative package manager, often faster
@@ -21,7 +21,6 @@ pkgs.mkShellNoCC {
     # Backend Development (Python FastAPI + AI/ML)
     python311
     python311Packages.pip
-    python311Packages.poetry    # Python dependency management
     python311Packages.virtualenv
     black                       # Python code formatter
     python311Packages.flake8    # Python linting
@@ -49,10 +48,6 @@ pkgs.mkShellNoCC {
     docker                      # Container development
     docker-compose              # Multi-container development
     
-    # Testing & Quality Assurance
-    nodePackages.jest           # JavaScript testing
-    nodePackages.cypress        # E2E testing
-    nodePackages.vitest         # Vite-native testing framework
     
     # Documentation & Markdown
     pandoc                      # Document conversion
@@ -74,7 +69,7 @@ pkgs.mkShellNoCC {
     echo ""
     echo "✅ Frontend Tools (Vue 3 + Vite):"
     echo "  - Node.js: ${pkgs.nodejs_22.version} (LTS)"
-    echo "  - Build Tool: Vite (fast, modern alternative to Vue CLI)"
+    echo "  - Build Tool: Vite (installed per-project via pnpm)"
     echo "  - Package Managers: npm, pnpm"
     echo "  - Vue Tools: create-vue, Vue Language Server"
     echo "  - Code Quality: Prettier, ESLint, TypeScript"
