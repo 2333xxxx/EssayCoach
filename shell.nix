@@ -77,7 +77,6 @@ pkgs.mkShellNoCC {
     echo ""
     echo "✅ Backend Tools:"
     echo "  - Python: ${pkgs.python311.version}"
-    echo "  - Package Management: Poetry, pip, virtualenv"
     echo "  - Code Quality: Black, Flake8, MyPy"
     echo "  - AI/ML: NumPy, Pandas (cross-platform compatible)"
     echo ""
