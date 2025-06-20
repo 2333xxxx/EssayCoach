@@ -1,0 +1,29 @@
+{
+  "display": "Base",
+  "compilerOptions": {
+    "composite": false,
+    "jsx": "preserve",
+    "lib": ["esnext"],
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": false,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["**/node_modules/**", "**/dist/**"]
+}

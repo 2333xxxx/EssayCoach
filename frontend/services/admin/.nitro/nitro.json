@@ -1,0 +1,17 @@
+{
+  "date": "2025-06-20T01:14:07.575Z",
+  "preset": "nitro-dev",
+  "framework": {
+    "name": "nitro",
+    "version": ""
+  },
+  "versions": {
+    "nitro": "2.11.11"
+  },
+  "dev": {
+    "pid": 30885,
+    "workerAddress": {
+      "socketPath": "/private/tmp/nix-shell-30020-0/nitro-worker-30885-1-1-2576.sock"
+    }
+  }
+}
