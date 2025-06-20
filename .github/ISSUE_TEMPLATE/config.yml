@@ -1,9 +1,3 @@
 # .github/ISSUE_TEMPLATE/config.yml
 blank_issues_enabled: false # Disallow blank issues, force users to choose a template
-contact_links:
-  - name: 💬 Technical Support
-    url: https://your-company.com/support # Replace with your support link
-    about: If you need technical assistance or have questions, please visit our help center.
-  - name: 💡 Community Forum
-    url: https://your-community-forum.com # Replace with your community forum link
-    about: Connect with other users and developers.
+
