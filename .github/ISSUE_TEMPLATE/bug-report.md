@@ -1,9 +1,10 @@
 ---
-name: 🐛 Bug Report
+name: "\U0001F41B Bug Report"
 about: Report a code defect or system error.
-title: "fix: [Module/Feature] - Briefly describe the issue"
-labels: ["type: bug", "severity: medium", "priority: high"]
-assignees: []
+title: 'fix: [Module/Feature] - Briefly describe the issue'
+labels: ''
+assignees: ''
+
 ---
 
 ### Bug Description

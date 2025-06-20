@@ -1,9 +1,10 @@
 ---
-name: 🔬 Spike / Research
+name: "\U0001F52C Spike / Research"
 about: For exploring and researching highly uncertain technical solutions.
-title: "spike: Research [Topic]"
-labels: ["type: spike", "status: backlog"]
-assignees: []
+title: 'spike: Research [Topic]'
+labels: ''
+assignees: ''
+
 ---
 
 ### Spike Objective

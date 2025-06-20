@@ -1,9 +1,11 @@
 ---
-name: ⚙️ Technical Task
-about: Describe an internal development task, such as refactoring, infrastructure, performance optimization, etc.
-title: "chore: [Module] - Briefly describe the technical task"
-labels: ["type: task", "type: tech debt"]
-assignees: []
+name: "⚙️ Technical Task"
+about: Describe an internal development task, such as refactoring, infrastructure,
+  performance optimization, etc.
+title: 'chore: [Module] - Briefly describe the technical task'
+labels: ''
+assignees: ''
+
 ---
 
 ### Task Objective

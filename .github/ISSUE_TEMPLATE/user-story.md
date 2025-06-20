@@ -1,9 +1,10 @@
 ---
-name: ✨ User Story
+name: "✨ User Story"
 about: Describe a new feature or user requirement.
-title: "feat: As a [role], I want [feature], so that [value]"
-labels: ["type: story", "priority: medium"]
-assignees: []
+title: 'feat: As a [role], I want [feature], so that [value]'
+labels: ''
+assignees: ''
+
 ---
 
 ## As a [Role], I want [Feature], so that [Value]

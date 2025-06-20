@@ -1,9 +1,10 @@
 ---
-name: 📝 Documentation Update
+name: "\U0001F4DD Documentation Update"
 about: Submit a request for documentation creation, update, or improvement.
-title: "docs: [Module/Doc Name] - Briefly describe doc change"
-labels: ["type: documentation"]
-assignees: []
+title: 'docs: [Module/Doc Name] - Briefly describe doc change'
+labels: ''
+assignees: ''
+
 ---
 
 ### Documentation Type
