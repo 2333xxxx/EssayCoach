@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+// Note: Thanks to auto-imports, we don't need to manually import these!
+// import { RouterLink, RouterView } from 'vue-router'
+// import { useDark, useToggle } from '@vueuse/core'
+
 import HelloWorld from './components/HelloWorld.vue'
+
+// Dark mode toggle using VueUse (auto-imported)
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -8,7 +15,18 @@ import HelloWorld from './components/HelloWorld.vue'
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld msg="You did it! Now with Celeris Web!" />
+
+      <!-- UnoCSS utilities in action -->
+      <div class="flex items-center gap-4 mb-4">
+        <button 
+          class="btn"
+          @click="toggleDark()"
+        >
+          {{ isDark ? '☀️' : '🌙' }}
+          {{ isDark ? 'Light' : 'Dark' }} Mode
+        </button>
+      </div>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
