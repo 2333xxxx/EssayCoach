@@ -1,12 +1,12 @@
 # EssayCoach
 
-EssayCoach is a modern platform for essay coaching, leveraging a full-stack approach with a Vue 3 frontend and a Python FastAPI backend. This document provides guidance for developers collaborating on the project.
+EssayCoach is a modern platform for essay coaching, leveraging a full-stack approach with a Vue 3 frontend built on the [Celeris Web](https://github.com/kirklin/celeris-web) framework and a Python FastAPI backend. This document provides guidance for developers collaborating on the project.
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Vite, TypeScript, pnpm
+- **Frontend:** Vue 3, Vite, TypeScript, pnpm (built on [Celeris Web](https://github.com/kirklin/celeris-web) framework)
 - **State Management:** Pinia (already configured)
 - **Routing:** Vue Router (already configured)
 - **Testing:** Vitest (unit) & Cypress (E2E) pre-configured in the `frontend/` workspace
@@ -107,10 +107,12 @@ Set these in your shell or in a `.env` file (see `.gitignore` for ignored env fi
 - Use feature branches and submit pull requests for review.
 - Follow code style guidelines (Prettier, ESLint for frontend; Black, Flake8 for backend).
 - Write tests for new features.
+- Report bugs or request features using our [issue templates](.github/ISSUE_TEMPLATE/) - choose from Bug Report, User Story, Technical Task, Documentation Update, or Spike/Research templates.
 
 ---
 
 ## Additional Notes
+
 - Use the Nix shell for a consistent, reproducible environment.
 - For Docker-based development, see `docker-compose.yml` (if present).
 - For questions, see the `/docs` folder or contact the maintainers.
@@ -134,9 +136,9 @@ You can add more packages at any time with `pnpm add <pkg>`.
 
 The design documents outline additional services and libraries that are **not yet in the codebase**. These will be integrated iteratively:
 
-* **Frontend:** Axios (API client), a component framework (Element Plus or Vuetify), richer internationalization tooling.
-* **Backend:** FastAPI + SQLAlchemy + Alembic + Pydantic, JWT/OAuth2 libraries, OpenSearch / vector DB client, async workers (e.g. Celery, Redis Queue), LLM/AI SDKs.
-* **DevOps / Infra:** Kubernetes toolchain (`kubectl`, `helm`), Alibaba Cloud SDKs, monitoring (Prometheus / OpenTelemetry), CI/CD pipeline scripts.
+- **Frontend:** Axios (API client), a component framework (Element Plus or Vuetify), richer internationalization tooling.
+- **Backend:** FastAPI + SQLAlchemy + Alembic + Pydantic, JWT/OAuth2 libraries, OpenSearch / vector DB client, async workers (e.g. Celery, Redis Queue), LLM/AI SDKs.
+- **DevOps / Infra:** Kubernetes toolchain (`kubectl`, `helm`), Alibaba Cloud SDKs, monitoring (Prometheus / OpenTelemetry), CI/CD pipeline scripts.
 
 If you encounter a missing tool while implementing a feature, feel free to update `shell.nix`, `pyproject.toml`, or `package.json` and open a PR.
 
