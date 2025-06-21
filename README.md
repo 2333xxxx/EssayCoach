@@ -9,12 +9,12 @@ EssayCoach is a modern platform for essay coaching, leveraging a full-stack appr
 - **Frontend:** Vue 3, Vite, TypeScript, pnpm (built on [Celeris Web](https://github.com/kirklin/celeris-web) framework)
 - **State Management:** Pinia (already configured)
 - **Routing:** Vue Router (already configured)
-- **Testing:** Vitest (unit) & Cypress (E2E) pre-configured in the `frontend/` workspace
+- **Testing:** Vitest (unit) & Cypress (E2E) pre-configured in the `main/` workspace
 - **Backend:** Python 3.11, FastAPI
 - **Database:** PostgreSQL (development), SQLite (optional for prototyping)
 - **Cache/Queue:** Redis
 - **Dev Environment:** Nix (shell.nix), Poetry (Python), pnpm (Node)
-- **Testing:** Vitest (frontend), Pytest (backend)
+- **Testing:** Vitest (main), Pytest (backend)
 
 ---
 
@@ -36,7 +36,7 @@ cd EssayCoach
 ```sh
 nix-shell
 ```
-This will provide all necessary tools for both frontend and backend development.
+This will provide all necessary tools for both main and backend development.
 
 ---
 
@@ -44,7 +44,7 @@ This will provide all necessary tools for both frontend and backend development.
 
 ### Setup
 ```sh
-cd frontend
+cd main
 pnpm install
 ```
 
@@ -105,7 +105,7 @@ Set these in your shell or in a `.env` file (see `.gitignore` for ignored env fi
 
 ## Contributing
 - Use feature branches and submit pull requests for review.
-- Follow code style guidelines (Prettier, ESLint for frontend; Black, Flake8 for backend).
+- Follow code style guidelines (Prettier, ESLint for main; Black, Flake8 for backend).
 - Write tests for new features.
 - Report bugs or request features using our [issue templates](.github/ISSUE_TEMPLATE/) - choose from Bug Report, User Story, Technical Task, Documentation Update, or Spike/Research templates.
 
@@ -119,7 +119,7 @@ Set these in your shell or in a `.env` file (see `.gitignore` for ignored env fi
 
 ### Current Front-End Dependencies (managed by `pnpm`)
 
-The `frontend/package.json` is already pre-populated with the core libraries your Vue 3 SPA needs:
+The `main/package.json` is already pre-populated with the core libraries your Vue 3 SPA needs:
 
 | Category | Package |
 |----------|---------|
