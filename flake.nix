@@ -21,8 +21,8 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             # Frontend Development (Vue.js 3 + Vite)
+            pnpm
             nodejs_22
-            nodePackages.pnpm
             nodePackages.prettier
             nodePackages.typescript
             nodePackages.eslint
