@@ -103,6 +103,27 @@ Set these in your shell or in a `.env` file (see `.gitignore` for ignored env fi
 
 ---
 
+## Branch Naming Rules
+
+When creating branches for this project, please follow these naming conventions:
+
+- Feature:      feature/<issue-id>-<short-description>
+- Bugfix:       bugfix/<issue-id>-<short-description>
+- Hotfix:       hotfix/<issue-id>-<short-description>
+- Release:      release/<version>
+- Documentation: docs/<short-description>
+- Refactoring:  refactor/<short-description>
+
+
+### General Guidelines
+- Use lowercase letters and hyphens to separate words.
+- Keep branch names short but descriptive.
+- Avoid using special characters or spaces.
+
+---
+
+
+
 ## Contributing
 - Use feature branches and submit pull requests for review.
 - Follow code style guidelines (Prettier, ESLint for main; Black, Flake8 for backend).
