@@ -1,9 +1,9 @@
 ---
 name: "Technique Stack Proposal"
-description: "Propose a new tool, library, or technology for the project."
+about: Propose a new tool, library, or technology for the project.
 title: "Proposal: Add [Tool Name] for [Purpose]"
-labels: ["tech-stack"]
-assignees: []
+labels: ''
+assignees: ''
 ---
 
 # Proposal: Add [Tool Name] for [Purpose]
@@ -22,3 +22,5 @@ Right now, we have a problem:
 With [Tool Name], we can:
 ✔ [Benefit 1, e.g., "See every AI call in one dashboard"]
 ✔ [Benefit 2, e.g., "Automatically check for bad responses"]
+
+
