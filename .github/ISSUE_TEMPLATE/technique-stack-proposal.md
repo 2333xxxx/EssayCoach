@@ -1,3 +1,11 @@
+---
+name: "Technique Stack Proposal"
+description: "Propose a new tool, library, or technology for the project."
+title: "Proposal: Add [Tool Name] for [Purpose]"
+labels: ["tech-stack"]
+assignees: []
+---
+
 # Proposal: Add [Tool Name] for [Purpose]
 
 ## What is this?
