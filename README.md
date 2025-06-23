@@ -13,7 +13,7 @@ EssayCoach is a modern platform for essay coaching, leveraging a full-stack appr
 - **Backend:** Python 3.11, FastAPI
 - **Database:** PostgreSQL (development), SQLite (optional for prototyping)
 - **Cache/Queue:** Redis
-- **Dev Environment:** Nix (shell.nix), Poetry (Python), pnpm (Node)
+- **Dev Environment:** Nix (flake-based, recommended), Poetry (Python), pnpm (Node)
 - **Testing:** Vitest (main), Pytest (backend)
 
 ---
@@ -21,7 +21,7 @@ EssayCoach is a modern platform for essay coaching, leveraging a full-stack appr
 ## Getting Started
 
 ### 1. Prerequisites
-- [Nix](https://nixos.org/download.html) (recommended for consistent dev environments)
+- [Nix](https://nixos.org/download.html) (with flakes enabled, recommended for consistent dev environments)
 - [Poetry](https://python-poetry.org/docs/#installation) (if not using Nix)
 - [Node.js 22+](https://nodejs.org/) (if not using Nix)
 - [pnpm](https://pnpm.io/installation) (if not using Nix)
@@ -32,11 +32,13 @@ git clone https://github.com/your-org/EssayCoach.git
 cd EssayCoach
 ```
 
-### 3. Enter the Nix Shell (Recommended)
+### 3. Enter the Nix Development Shell (Recommended)
+
+#### Using Nix Flakes (Preferred)
 ```sh
-nix-shell
+nix develop
 ```
-This will provide all necessary tools for both main and backend development.
+This will provide all necessary tools for both main and backend development using the flake.nix configuration.
 
 ---
 
@@ -50,12 +52,14 @@ pnpm install
 
 ### Development Server
 ```sh
+cd main
 pnpm run dev
 ```
 The app will be available at [http://localhost:5173](http://localhost:5173) by default.
 
 ### Build for Production
 ```sh
+cd main
 pnpm run build
 ```
 
@@ -162,4 +166,3 @@ The design documents outline additional services and libraries that are **not ye
 - **DevOps / Infra:** Kubernetes toolchain (`kubectl`, `helm`), Alibaba Cloud SDKs, monitoring (Prometheus / OpenTelemetry), CI/CD pipeline scripts.
 
 If you encounter a missing tool while implementing a feature, feel free to update `shell.nix`, `pyproject.toml`, or `package.json` and open a PR.
-
