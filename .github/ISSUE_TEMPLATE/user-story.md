@@ -23,7 +23,7 @@ The user story is considered complete when the following conditions are met:
 
 ---
 
-### Prerequisites / Dependencies
+### Prerequisites / Dependencies (Optional)
 - Does this user story depend on the completion of other features or tasks?
 - [ ] Dependency 1
 - [ ] Dependency 2
@@ -31,22 +31,18 @@ The user story is considered complete when the following conditions are met:
 
 ---
 
-### Design/Prototype
+### Design/Prototype (if applicable)
 - If applicable, link to design mockups, prototypes, or UI/UX documentation here.
 - [Link to Design/Prototype]
 
 ---
 
-### Technical Considerations
+### Technical Considerations (Optional)
 - Are there any known technical limitations or specific technical points to consider?
 - Expected impact on the existing architecture?
 
----
-
-### Estimation
-- (Please fill in based on your team's estimation method, e.g., Story Points S/M/L or time estimate)
 
 ---
 
-### Notes
+### Notes (Optional)
 Any additional information that might be helpful, such as edge cases, or questions for team discussion.
