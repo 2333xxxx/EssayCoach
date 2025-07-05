@@ -64,15 +64,22 @@
                 echo "[dev-pg] Starting PostgreSQL..."
                 
                 # Find an available port starting from 5433 (avoiding system default 5432)
+                # Use a more robust method that doesn't rely on netstat and reduces race conditions
+                export PGPORT=""
                 for port in $(seq 5433 5500); do
-                  if ! netstat -ln | grep -q ":$port "; then
+                  # Try to bind to the port using a simple TCP test
+                  if ! (exec 3<>/dev/tcp/localhost/$port) 2>/dev/null; then
                     export PGPORT=$port
                     break
+                  else
+                    exec 3<&-
+                    exec 3>&-
                   fi
                 done
                 
                 if [ -z "$PGPORT" ]; then
                   echo "[dev-pg] ERROR: Could not find an available port in range 5433-5500"
+                  echo "[dev-pg] All ports in the range appear to be in use."
                   return 1
                 fi
                 
@@ -93,7 +100,7 @@
                 echo "[dev-pg] Database 'essaycoach' with user 'essayadmin' is ready."
               else
                 # If already running, retrieve port from the pid file
-                export PGPORT=$(head -n 5 "$PGDATA/postmaster.pid" | tail -n 1)
+                export PGPORT=$(head -n 4 "$PGDATA/postmaster.pid" | tail -n 1)
                 echo "[dev-pg] PostgreSQL is already running on port $PGPORT."
               fi
             }
