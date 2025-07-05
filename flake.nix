@@ -20,6 +20,8 @@
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
+            docker-compose
+            docker
             # Frontend Development (Vue.js 3 + Vite)
             pnpm
             nodejs_22
@@ -50,14 +52,14 @@
             start_local_pg() {
               # Init DB if it doesn't exist
               if [ ! -d "$PGDATA" ]; then
-                echo "[dev-pg] Initializing cluster in $PGDATA …"
-                initdb -D "$PGDATA" --username=postgres --encoding=UTF8 >/dev/null
+                echo "Initializing PostgreSQL..."
+                initdb --auth=trust --no-locale --encoding=UTF8
               fi
 
               # Start if not already running
               if ! pg_isready -q -h "$PGHOST" -p "$PGPORT"; then
                 echo "[dev-pg] Starting PostgreSQL on port $PGPORT …"
-                pg_ctl -D "$PGDATA" -o "-p $PGPORT" -l "$PGDATA/postgres.log" -w start
+                pg_ctl -D "$PGDATA" -o "-p $PGPORT" -l "$PGDATA/logfile" -w start
 
                 # Ensure default role & database exist
                 psql -U postgres -p "$PGPORT" -h "$PGHOST" -tc "SELECT 1 FROM pg_roles WHERE rolname = 'essayadmin'" | grep -q 1 || \
