@@ -1218,3 +1218,8 @@ cypress/screenshots/
 /.zsh/oh-my-zsh/SECURITY.md
 /.zsh/.zcompdump
 /.zsh/.zshrc
+
+# Local PostgreSQL volumes & dev cluster
+.docker/
+docker/db/data/
+.dev_pg/
