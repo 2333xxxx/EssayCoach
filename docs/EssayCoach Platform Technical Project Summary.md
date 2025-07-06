@@ -2,7 +2,7 @@
 
 ## 1. Project Mandate & Vision
 
-The EssayCoach platform aims to revolutionize writing education through an AI-powered evaluation system. Our core objective is to deliver immediate, multi-dimensional feedback to students on their essay submissions, while providing educators with robust analytical tools for pedagogical research and performance tracking. This will be achieved via a scalable, extensible, and mobile-ready web application.
+The EssayCoach platform aims to revolutionize writing education through an AI-powered evaluation system. Our core objective is to deliver immediate, multi-dimensional feedback to students on their essay submissions, while providing educators with robust analytical tools for pedagogical research and performance tracking. This will be achieved via a scalable, extensible web application. **Mobile clients will be read-only (viewing data, progress, and history); essay submission is performed exclusively via the web app.**
 
 ## 2. Architectural Overview
 
@@ -21,10 +21,11 @@ We will implement a **distributed microservices architecture**, designed for hig
 ## 3. Core Technical Components & Services
 
 ### 3.1 Frontend (Vue.js 3 SPA)
-*   **Framework:** Vue.js 3 (Composition API preferred), managed with Vite for development and bundling.
-*   **State Management:** Pinia or Vuex 4 for global state management.
+*   **Framework:** Vue.js 3 — leveraging the **Celeris Web Vue template** (Composition API & Vite powered).
+*   **State Management:** Pinia for lightweight, modular global state.
 *   **Routing:** Vue Router.
-*   **UI Framework:** Element Plus or Vuetify for consistent, responsive UI components.
+*   **UI Library:** **Naive UI** for a modern, theme-able component set.
+*   **CSS Utility:** **UnoCSS** for atomic/utility-first styling and design tokens.
 *   **API Client:** Axios for HTTP requests.
 *   **Build & Deployment:** Production builds (static assets) will be deployed to **Alibaba Cloud OSS** buckets and served via **Alibaba Cloud CDN** for global low-latency access within China.
 
@@ -35,7 +36,7 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
     *   **Authentication:** JWT-based tokens issued upon successful login. Tokens passed in `Authorization` header for subsequent requests. OAuth2/OpenID Connect for future SSO integration.
     *   **Data Store:** ApsaraDB for RDS (PostgreSQL).
 *   **Essay Submission Service (ESS):**
-    *   **Responsibility:** Handles essay file uploads, stores essay metadata, manages revision history.
+    *   **Responsibility:** Handles essay file uploads, stores essay metadata, and manages revision history **while enforcing a "one submission per student per task" rule (unless the teacher explicitly returns the work for resubmission). After a final grade is issued, students can continue to refine the same essay directly on the platform with AI assistance or consult their teacher — no new submission object is created.**
     *   **File Storage:** Raw essay files (e.g., `.docx`, `.txt`, `.pdf`) stored in **Alibaba Cloud OSS**.
     *   **Metadata Storage:** Essay metadata (title, author, submission date, status, OSS URL) in ApsaraDB for RDS (PostgreSQL).
     *   **Event Trigger:** Upon successful submission, publishes a message to **Alibaba Cloud Message Queue (MQ for RabbitMQ/RocketMQ)**, signaling the AI Evaluation Service to process the essay.
@@ -79,10 +80,10 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
     *   **Deployment:** Standard FastAPI service on ACK.
 
 ### 3.3 Databases & Storage
-*   **Relational Database:** **Alibaba Cloud ApsaraDB for RDS (PostgreSQL Edition)**.
-    *   **Purpose:** Primary data store for structured application data: user accounts, essay metadata, detailed AI evaluation results (scores, feedback text, fact-check outcomes, writing advice), rubric definitions.
-    *   **Benefits:** Managed service handles backups, replication, high availability, patching, and scaling.
-    *   **Migration Strategy:** Initial development can use SQLite locally with SQLAlchemy. Transition to RDS PostgreSQL in staging/production environments by simply updating the database connection string. Schema migrations managed with **Alembic**.
+*   **Relational Database:** **PostgreSQL (local container for development, Alibaba Cloud ApsaraDB for RDS in production)**.
+    *   **Purpose:** Sole data store for structured application data: user accounts, essay metadata, evaluation results, rubric definitions, etc.
+    *   **Benefits:** Consistency between environments, rich feature set (JSONB, full-text search), strong ecosystem support.
+    *   **Migration Strategy:** The same PostgreSQL schema is used from day one. Developers run a containerized PostgreSQL instance locally; staging/production environments point to managed RDS instances. Schema migrations are handled with **Alembic**.
 *   **Vector Database:** **Alibaba Cloud ApsaraDB for OpenSearch (Vector Search Edition)**.
     *   **Purpose:** High-performance storage and retrieval of vector embeddings for the RAG-based Grading Engine (rubric criteria embeddings, potentially essay segment embeddings for advanced semantic search).
     *   **Benefits:** Optimized for similarity search, scales horizontally.
@@ -121,6 +122,7 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
 *   **Code Quality:** Linting (Flake8, Black), type hinting (MyPy), unit/integration/E2E testing for all services.
 *   **Documentation:** API documentation (FastAPI auto-generates OpenAPI specs), architectural diagrams, READMEs for each service.
 *   **Observability:** Implement structured logging, expose Prometheus-compatible metrics endpoints, consider distributed tracing (e.g., OpenTelemetry integration).
+*   **Reproducible Dev Environment:** The entire toolchain (Python, Poetry/Pip, PostgreSQL CLI, Docker, etc.) is pinned and provisioned via **Nix flakes**. Team members simply run `nix develop` to enter an identical shell across macOS, Linux, and CI environments.
 *   **Database Migrations:** Utilize Alembic for managing database schema changes in a version-controlled manner, ensuring smooth upgrades.
 
 ## 6. Scalability & Extensibility
