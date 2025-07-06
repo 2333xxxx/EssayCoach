@@ -69,7 +69,7 @@ As a teacher, you will have powerful teaching management capabilities within the
         *   **Essay Title/Topic:** Clearly define the writing direction for students.
         *   **Detailed Description & Requirements:** E.g., word count, essay style, reference materials.
         *   **Deadline:** Set the submission time limit for the task.
-        *   **Allow Multiple Submissions:** You can choose whether students can submit revised versions multiple times before the deadline, allowing them to iterate based on AI feedback.
+        *   **Submission Policy (Fixed):** By default **each student can submit ONE essay per task**.  Teachers can optionally enable the *"Return for Revision"* action later (see below) which re-opens the submission.  Students cannot create additional parallel submissions for assigned tasks. However, multiple submission for exercises are allowed.
 
 3.  **Upload or customize grading standards (Rubrics):**
     *   This is a core control point for teachers on the EssayCoach platform. You can:
@@ -87,7 +87,9 @@ As a teacher, you will have powerful teaching management capabilities within the
     *   After completing all settings, click "Publish." The task will immediately appear in your students' task lists, and they can start viewing and preparing their submissions.
 
 6.  **Teacher Oversight and Final Grading Authority:**
-    *   While the AI provides comprehensive scoring and feedback, **teachers retain the ultimate authority to determine the final grade.** The platform is designed to empower teachers, offering data-driven insights to support their professional judgment and pedagogical decisions.
+    *   While the AI provides comprehensive scoring and feedback, **teachers retain the ultimate authority to determine the final grade.**  After reviewing, a teacher can:
+        * **Accept & Finalise Grade** – locking the submission. Students may still refine the essay *inline* within the same record (AI-assisted editing) but cannot resubmit a new file.
+        * **Return for Revision** – unlocks the submission so the student can upload a *replacement* version (still counted as the single submission for that task).
 
 ---
 
@@ -99,7 +101,7 @@ Once the teacher publishes a task, students can begin their learning journey:
     *   Upon logging in, students will see a list of all pending or completed writing tasks on their personal homepage.
 
 2.  **Submit Essay:**
-    *   Students select the corresponding task and submit their essay. The platform supports various submission methods, such as:
+    *   Students select the corresponding task and submit their single allowed essay.  The platform supports various submission methods, such as:
         *   **Directly pasting text.**
         *   **Uploading document files** (e.g., Word, PDF, TXT).
     *   The system will automatically receive and process the submitted essay.
@@ -120,7 +122,9 @@ Once the teacher publishes a task, students can begin their learning journey:
             *   These features are also available separately as per user's request
     
 5.  **Revise and Iterate:**
-    *   Students can revise their essays based on the AI report's feedback. If the teacher allows multiple submissions, students can repeatedly submit new versions. The system will **record and compare each revision's history and grading results**, helping students clearly track their progress.
+    *   If the teacher **returns** the submission, the student may upload an updated file which **replaces** the original (version history is preserved).  
+    *   Once the grade is *finalised*, the file upload channel closes.  Students can still **edit the essay inline on the platform with real-time AI suggestions** (tracked as drafts) or discuss with the teacher, but no new submission object is created.
+    *   Mobile clients are **read-only** – they allow students to view feedback, version history, and AI suggestions on the go, but uploading/replacing essays must be done on the web app.
 
 ---
 
