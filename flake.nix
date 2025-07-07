@@ -2,7 +2,17 @@
   description = "A development environment for EssayCoach";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/25.05";
+    # --- Nixpkgs Source Selection ---
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://mirrors.sjtug.sjtu.edu.cn/nix-channels/store?priority=5"
+    ];
+    extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
   };
 
   outputs = { self, nixpkgs }:
