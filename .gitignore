@@ -205,3 +205,8 @@ cypress/screenshots/
 .docker/
 docker/db/data/
 .dev_pg/
+
+# Nitro (Backend Framework)
+.nitro/
+nitro.json
+.output/
