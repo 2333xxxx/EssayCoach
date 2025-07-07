@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.2.0" use-changelog="false" max-obj-count="20"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="0,84" last-zoom="0.7" scene-rect="0,-340,1776.55,1800.12"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<table name="user" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[A table for all user entities, including student, teacher, and admins.]]> </comment>
+	<position x="60" y="-260"/>
+	<column name="user_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[Unique user identifiers. Student ids are obtainable from the teaching system, while lecturers and admins are assigned other unique ids.]]> </comment>
+	</column>
+	<column name="user_fname">
+		<type name="varchar" length="20"/>
+		<comment> <![CDATA[User firstname]]> </comment>
+	</column>
+	<column name="user_lname">
+		<type name="varchar" length="20"/>
+		<comment> <![CDATA[User lastname]]> </comment>
+	</column>
+	<column name="user_email">
+		<type name="varchar" length="50"/>
+		<comment> <![CDATA[User email, required for resetting password. Unique constraint applied.]]> </comment>
+	</column>
+	<column name="user_role">
+		<type name="varchar" length="10"/>
+		<comment> <![CDATA[User role: student, lecturer, and admin
+]]> </comment>
+	</column>
+	<column name="user_status">
+		<type name="varchar" length="10"/>
+		<comment> <![CDATA[User status: active, suspended, or unregistered]]> </comment>
+	</column>
+	<column name="user_credential">
+		<type name="varchar" length="16"/>
+		<comment> <![CDATA[Hashed credential for user]]> </comment>
+	</column>
+	<constraint name="user_pk" type="pk-constr" table="public.&quot;user&quot;">
+		<columns names="user_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="user_email_uq" type="uq-constr" table="public.&quot;user&quot;">
+		<columns names="user_email" ref-type="src-columns"/>
+		<comment> <![CDATA[User emails must be unique for resetting password for account]]> </comment>
+	</constraint>
+	<constraint name="user_role_ck" type="ck-constr" table="public.&quot;user&quot;">
+			<expression> <![CDATA[user_role IN ('student', 'lecturer', 'admin')]]> </expression>
+		<comment> <![CDATA[User role are designated to be one of student, lecturer, and admin]]> </comment>
+	</constraint>
+	<constraint name="user_status_ck" type="ck-constr" table="public.&quot;user&quot;">
+			<expression> <![CDATA[user_status IN ('active', 'suspended', 'unregistered')]]> </expression>
+		<comment> <![CDATA[user status:
+active: normal
+suspended: registered by baned from login
+unregistered: added to DB but not create account yet]]> </comment>
+	</constraint>
+</table>
+
+<table name="enrollment" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[The enrollment of student to a specific class. A student can only have one enrollment to one class of one unit anytime.]]> </comment>
+	<position x="500" y="-320"/>
+	<column name="enrollment_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[Unique identifier for each enrollment]]> </comment>
+	</column>
+	<column name="enrollment_time" default-value="now()" generated="true">
+		<type name="timestamp" length="0"/>
+		<comment> <![CDATA[The time when the student is enrolled in the DBMS]]> </comment>
+	</column>
+	<constraint name="enrollment_pk" type="pk-constr" table="public.enrollment">
+		<columns names="enrollment_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="class_id_class" index="3"/>
+		<object name="unit_id_unit" index="4"/>
+		<object name="user_id_user" index="2"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="class_enrollment_fk" index="2"/>
+		<object name="unit_enrollment_fk" index="3"/>
+		<object name="user_enrollment_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="student_has_many_enrollment" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#a170ca"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.enrollment"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-20.3571" y="-11.9485"/>
+	</label>
+</relationship>
+
+<table name="unit" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[A table for unit entity]]> </comment>
+	<position x="1200" y="80"/>
+	<column name="unit_id" not-null="true">
+		<type name="varchar" length="10"/>
+		<comment> <![CDATA[Unique identifier for each unit, same as the unit code]]> </comment>
+	</column>
+	<column name="unit_name" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment> <![CDATA[Full name of the unit]]> </comment>
+	</column>
+	<column name="unit_desc">
+		<type name="varchar" length="50"/>
+		<comment> <![CDATA[details of the unit]]> </comment>
+	</column>
+	<constraint name="unit_pk" type="pk-constr" table="public.unit">
+		<columns names="unit_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="class" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[A table for class entity]]> </comment>
+	<position x="1120" y="-280"/>
+	<column name="class_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="32767" cache="1">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[Unique identifier for a class under a unit]]> </comment>
+	</column>
+	<column name="class_size" not-null="true" default-value="0">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[current number of students in the class]]> </comment>
+	</column>
+	<constraint name="class_pk" type="pk-constr" table="public.class">
+		<columns names="class_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="class_size_ck" type="ck-constr" table="public.class">
+			<expression> <![CDATA[class_size >= 0]]> </expression>
+		<comment> <![CDATA[Class size must be non-negative]]> </comment>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="unit_id_unit" index="2"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="unit_class_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="class_has_many_enrollment" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#df7e0a"
+	 src-table="public.class"
+	 dst-table="public.enrollment"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<function name="increase_class_size"
+		window-func="false"
+		returns-setof="false"
+		behavior-type="CALLED ON NULL INPUT"
+		function-type="VOLATILE"
+		security-type="SECURITY INVOKER"
+		parallel-type="PARALLEL UNSAFE"
+		execution-cost="1"
+		row-amount="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[Add class size by one after an enrollment to a class is triggered]]> </comment>
+	<language name="plpgsql"/>
+	<return-type>
+	<type name="trigger" length="0"/>
+	</return-type>
+	<definition> <![CDATA[BEGIN
+  UPDATE class
+  SET class_size = class_size + 1
+  WHERE class_id = NEW.class_id_class;
+  RETURN NEW;
+END;
+]]> </definition>
+</function>
+
+<trigger name="trg_increment_class_size" firing-type="AFTER" per-line="true" constraint="false"
+	 ins-event="true" del-event="false" upd-event="false" trunc-event="false"
+	 table="public.enrollment">
+		<comment> <![CDATA[increase class size by 1 after student enroll]]> </comment>
+		<function signature="public.increase_class_size()"/>
+</trigger>
+
+<table name="task" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[Task created by lecturer/admin for students in some classes/units to complete]]> </comment>
+	<position x="1280" y="440"/>
+	<column name="task_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[Unique identifier for task.]]> </comment>
+	</column>
+	<column name="task_publish_datetime" default-value="now()" generated="true">
+		<type name="timestamp" length="0"/>
+		<comment> <![CDATA[time/date when the task is published]]> </comment>
+	</column>
+	<column name="task_due_datetime" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment> <![CDATA[time/date when the task is due]]> </comment>
+	</column>
+	<constraint name="task_pk" type="pk-constr" table="public.task">
+		<columns names="task_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="task_publish_time_task_due_time_ck" type="ck-constr" table="public.task">
+			<expression> <![CDATA[task_publish_time < task_due_time]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="rubric_id_marking_rubric" index="4"/>
+		<object name="unit_id_unit" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="marking_rubric_task_fk" index="3"/>
+		<object name="unit_task_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="unit_has_many_enrollment" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#ed5393"
+	 src-table="public.unit"
+	 dst-table="public.enrollment"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-17.9593" y="-51.6302"/>
+	</label>
+</relationship>
+
+<relationship name="unit_has_many_class" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#3465ba"
+	 src-table="public.unit"
+	 dst-table="public.class"
+	 src-required="true" dst-required="false"/>
+
+<constraint name="user_id_class_id_unit_id_uq" type="uq-constr" table="public.enrollment">
+	<columns names="user_id_user,class_id_class,unit_id_unit" ref-type="src-columns"/>
+		<comment> <![CDATA[Every student can only enrolled to a specific class of a unit once]]> </comment>
+</constraint>
+
+<table name="teaching_assn" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[A weak entity for assignment of teacher to classes]]> </comment>
+	<position x="740" y="220"/>
+	<column name="teaching_assn_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="32767" cache="1">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[unique identifier]]> </comment>
+	</column>
+	<constraint name="teaching_assn_pk" type="pk-constr" table="public.teaching_assn">
+		<columns names="teaching_assn_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="class_id_class" index="2"/>
+		<object name="user_id_user" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="class_teaching_assn_fk" index="2"/>
+		<object name="user_teaching_assn_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="lecturer_has_many_teaching_assn" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#c8de38"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.teaching_assn"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="class_has_many_teaching_assn" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#8fe128"
+	 src-table="public.class"
+	 dst-table="public.teaching_assn"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-88.8529" y="25.847"/>
+	</label>
+</relationship>
+
+<constraint name="leacturer_id_class_id_uq" type="uq-constr" table="public.teaching_assn">
+	<columns names="user_id_user,class_id_class" ref-type="src-columns"/>
+		<comment> <![CDATA[One leacturer can only be assigned to a class once]]> </comment>
+</constraint>
+
+<relationship name="unit_has_many_task" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#da7ff6"
+	 src-table="public.unit"
+	 dst-table="public.task"
+	 src-required="true" dst-required="false"/>
+
+<table name="marking_rubric" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[entity for a marking rubric. A marking rubric has many items.]]> </comment>
+	<position x="560" y="480"/>
+	<column name="rubric_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[unique identifier for rubrics]]> </comment>
+	</column>
+	<column name="rubric_create_time" not-null="true" default-value="now()">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[timestamp when the rubirc is created]]> </comment>
+	</column>
+	<column name="rubric_desc">
+		<type name="varchar" length="100"/>
+		<comment> <![CDATA[description to the rubrics]]> </comment>
+	</column>
+	<constraint name="marking_rubric_pk" type="pk-constr" table="public.marking_rubric">
+		<columns names="rubric_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="user_id_user" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="user_marking_rubric_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="marking_rubric_applied_to_many_task" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#751778"
+	 src-table="public.marking_rubric"
+	 dst-table="public.task"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="user_creates_many_marking_rubric" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#34553a"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.marking_rubric"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="14.6178" y="-10.4201"/>
+	</label>
+</relationship>
+
+<table name="rubric_item" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[An item(dimension) under one rubric]]> </comment>
+	<position x="1480" y="780"/>
+	<column name="rubric_item_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[unique identifier for item]]> </comment>
+	</column>
+	<column name="rubric_item_name" not-null="true">
+		<type name="varchar" length="20"/>
+		<comment> <![CDATA[Title(header) name for the item]]> </comment>
+	</column>
+	<column name="rubric_item_weight" not-null="true">
+		<type name="float" length="0"/>
+		<comment> <![CDATA[the weight of the item on a scale of 100%, using 0.xx]]> </comment>
+	</column>
+	<constraint name="item_weight_ck" type="ck-constr" table="public.rubric_item">
+			<expression> <![CDATA[rubric_item_weight > 0]]> </expression>
+		<comment> <![CDATA[weight must be greater than 0]]> </comment>
+	</constraint>
+	<constraint name="rubric_item_pk" type="pk-constr" table="public.rubric_item">
+		<columns names="rubric_item_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="rubric_id_marking_rubric" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="marking_rubric_rubric_item_fk" index="2"/>
+	</customidxs></table>
+
+<relationship name="marking_rubric_has_many_rubric_item" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#9f85b7"
+	 src-table="public.marking_rubric"
+	 dst-table="public.rubric_item"
+	 src-required="true" dst-required="false"/>
+
+<table name="rubric_level_desc" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[The detailed description to each of the score range under a rubric item under a rubric.]]> </comment>
+	<position x="1480" y="-280"/>
+	<column name="level_desc_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[unique identifier for each level desc under one rubric]]> </comment>
+	</column>
+	<column name="level_min_score" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[min for the item]]> </comment>
+	</column>
+	<column name="level_max_score" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[max for the item]]> </comment>
+	</column>
+	<column name="level_desc" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<constraint name="min_max_ck" type="ck-constr" table="public.rubric_level_desc">
+			<expression> <![CDATA[level_min_score > 0 AND level_max_score > 0 AND level_min_score <= level_max_score
+]]> </expression>
+	</constraint>
+	<constraint name="rubric_level_desc_pk" type="pk-constr" table="public.rubric_level_desc">
+		<columns names="level_desc_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="rubric_item_has_many_rubric_level_desc" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#3f82b0"
+	 src-table="public.rubric_item"
+	 dst-table="public.rubric_level_desc"
+	 src-required="true" dst-required="false"/>
+
+<table name="submission" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment> <![CDATA[A weal entity for task submissions.]]> </comment>
+	<position x="580" y="1280"/>
+	<column name="submission_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[unique identifier for submission]]> </comment>
+	</column>
+	<column name="submission_time" default-value="now()" generated="true">
+		<type name="timestamp" length="0"/>
+		<comment> <![CDATA[time/date of submission]]> </comment>
+	</column>
+	<column name="submission_txt" not-null="true">
+		<type name="text" length="0"/>
+		<comment> <![CDATA[complete content of the essay submission]]> </comment>
+	</column>
+	<constraint name="submission_pk" type="pk-constr" table="public.submission">
+		<columns names="submission_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="task_id_task" index="2"/>
+		<object name="user_id_user" index="3"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="task_submission_fk" index="1"/>
+		<object name="user_submission_fk" index="2"/>
+	</customidxs></table>
+
+<table name="feedback" layers="0" collapse-mode="2" pagination="true" attribs-page="0" ext-attribs-page="0" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="140" y="900"/>
+	<column name="feedback_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="feedback_pk" type="pk-constr" table="public.feedback">
+		<columns names="feedback_id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="submission_id_submission" index="1"/>
+		<object name="user_id_user" index="2"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="feedback_uq" index="2"/>
+		<object name="submission_fk" index="1"/>
+		<object name="user_feedback_fk" index="3"/>
+	</customidxs></table>
+
+<table name="feedback_item" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1480" y="1160"/>
+	<column name="feedback_item_id" not-null="true"
+	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+		<type name="integer" length="0"/>
+		<comment> <![CDATA[unique identifier for feedback item]]> </comment>
+	</column>
+	<column name="feedback_item_score" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment> <![CDATA[actual score of the item]]> </comment>
+	</column>
+	<column name="feedback_item_comment">
+		<type name="text" length="0"/>
+		<comment> <![CDATA[short description to the sub-item grade]]> </comment>
+	</column>
+	<column name="feedback_item_source" not-null="true">
+		<type name="varchar" length="10"/>
+		<comment> <![CDATA[the source of feedback: 
+ai, human, or revised if ai feedback is slightly modifed by human]]> </comment>
+	</column>
+	<constraint name="feedback_item_pk" type="pk-constr" table="public.feedback_item">
+		<columns names="feedback_item_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="feedback_item_source_ck" type="ck-constr" table="public.feedback_item">
+			<expression> <![CDATA[feedback_item_source IN ("ai", "human", "revised")]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="feedback_id_feedback" index="2"/>
+		<object name="rubric_item_id_rubric_item" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="feedback_feedback_item_fk" index="3"/>
+		<object name="feedback_item_uq" index="2"/>
+		<object name="rubric_item_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="rubric_item_has_one_feedback_item" type="rel11" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#9f96c8"
+	 src-table="public.feedback_item"
+	 dst-table="public.rubric_item"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="feedback_has_many_feedback_item" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#a7d458"
+	 src-table="public.feedback"
+	 dst-table="public.feedback_item"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-172.37" y="-128.657"/>
+	</label>
+</relationship>
+
+<relationship name="submission_has_one_feedback" type="rel11" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#e5321a"
+	 src-table="public.feedback"
+	 dst-table="public.submission"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="27.9924" y="-21.753"/>
+	</label>
+</relationship>
+
+<relationship name="marker_provides_many_feedback" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#ff64e9"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.feedback"
+	 src-required="true" dst-required="false"/>
+
+<relationship name="task_has_many_submission" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#9b6313"
+	 src-table="public.task"
+	 dst-table="public.submission"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="40.483" y="-91.1144"/>
+	</label>
+</relationship>
+
+<relationship name="student_has_many_submission" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#2adb7c"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.submission"
+	 src-required="false" dst-required="false"/>
+
+<constraint name="marker_submision_uq" type="uq-constr" table="public.feedback">
+	<columns names="submission_id_submission,user_id_user" ref-type="src-columns"/>
+		<comment> <![CDATA[marker id and submision id can locate a deterministic feedback entity]]> </comment>
+</constraint>
+
+</dbmodel>
