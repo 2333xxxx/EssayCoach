@@ -5,7 +5,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 -->
 <dbmodel pgmodeler-ver="1.2.0" use-changelog="false" max-obj-count="20"
 	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
-	 last-position="0,848" last-zoom="1.2" scene-rect="0,-340,1776.55,1816.72"
+	 last-position="304,848" last-zoom="1.2" scene-rect="0,-340,1776.55,1816.72"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -82,7 +82,7 @@ unregistered: added to DB but not create account yet]]> </comment>
 		<type name="integer" length="0"/>
 		<comment> <![CDATA[Unique identifier for each enrollment]]> </comment>
 	</column>
-	<column name="enrollment_time" default-value="now()" generated="true">
+	<column name="enrollment_time" not-null="true" default-value="now()">
 		<type name="timestamp" length="0"/>
 		<comment> <![CDATA[The time when the student is enrolled in the DBMS]]> </comment>
 	</column>
@@ -216,13 +216,13 @@ END;
 	<schema name="public"/>
 	<role name="postgres"/>
 	<comment> <![CDATA[Task created by lecturer/admin for students in some classes/units to complete]]> </comment>
-	<position x="1280" y="440"/>
+	<position x="1300" y="440"/>
 	<column name="task_id" not-null="true"
 	 identity-type="ALWAYS" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
 		<type name="integer" length="0"/>
 		<comment> <![CDATA[Unique identifier for task.]]> </comment>
 	</column>
-	<column name="task_publish_datetime" default-value="now()" generated="true">
+	<column name="task_publish_datetime" not-null="true" default-value="now()">
 		<type name="timestamp" length="0"/>
 		<comment> <![CDATA[time/date when the task is published]]> </comment>
 	</column>
@@ -351,7 +351,7 @@ END;
 		<type name="integer" length="0"/>
 		<comment> <![CDATA[unique identifier for rubrics]]> </comment>
 	</column>
-	<column name="rubric_create_time" default-value="now()" generated="true">
+	<column name="rubric_create_time" not-null="true" default-value="now()">
 		<type name="timestamp" length="0"/>
 		<comment> <![CDATA[timestamp when the rubirc is created]]> </comment>
 	</column>
@@ -492,7 +492,7 @@ END;
 		<type name="integer" length="0"/>
 		<comment> <![CDATA[unique identifier for submission]]> </comment>
 	</column>
-	<column name="submission_time" default-value="now()" generated="true">
+	<column name="submission_time" not-null="true" default-value="now()">
 		<type name="timestamp" length="0"/>
 		<comment> <![CDATA[time/date of submission]]> </comment>
 	</column>
