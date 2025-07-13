@@ -108,6 +108,19 @@
                   psql -U postgres -p "$PGPORT" -h "$PGHOST" -c "CREATE DATABASE essaycoach OWNER essayadmin;" >/dev/null
 
                 echo "[dev-pg] Database 'essaycoach' with user 'essayadmin' is ready."
+                
+                # Load schema if database is empty (no tables exist)
+                if ! psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -tc "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1;" | grep -q 1; then
+                  echo "[dev-pg] Loading database schema..."
+                  psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/00_init.sql >/dev/null 2>&1
+                  if [ $? -eq 0 ]; then
+                    echo "[dev-pg] Schema loaded successfully."
+                  else
+                    echo "[dev-pg] WARNING: Failed to load schema. You may need to load it manually."
+                  fi
+                else
+                  echo "[dev-pg] Database already contains tables. Skipping schema load."
+                fi
               else
                 # If already running, retrieve port from the pid file
                 export PGPORT=$(head -n 4 "$PGDATA/postmaster.pid" | tail -n 1)
