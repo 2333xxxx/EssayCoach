@@ -183,6 +183,8 @@ dist-ssr
 # Nix
 result*
 .direnv/
+.nix-zsh/
+.dev_pg/
 .DS_Store
 
 # SQLite

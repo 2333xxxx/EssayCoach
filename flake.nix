@@ -32,6 +32,15 @@
           packages = with pkgs; [
             docker-compose
             docker
+            # Shell Configuration
+            zsh
+            zsh-autosuggestions
+            zsh-syntax-highlighting
+            zsh-completions
+            oh-my-zsh
+            starship
+            zsh-powerlevel10k
+            spaceship-prompt
             # Frontend Development (Vue.js 3 + Vite)
             pnpm
             nodejs_22
@@ -48,8 +57,125 @@
             black
             python311Packages.flake8
             python311Packages.mypy
+            python311Packages.django
+            python311Packages.fastapi
+            python311Packages.uvicorn
           ];
           shellHook = ''
+            # ---------- Zsh Configuration ----------
+            # Create a temporary zshrc for this session
+            export ZDOTDIR="$PWD/.nix-zsh"
+            mkdir -p "$ZDOTDIR"
+            
+            # Create Starship configuration
+            cat > "$ZDOTDIR/starship.toml" << 'EOF'
+# Starship configuration for EssayCoach development
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$cmd_duration\
+$line_break\
+$python\
+$nodejs\
+$character"""
+
+[directory]
+style = "blue"
+
+[character]
+success_symbol = "[❯](purple)"
+error_symbol = "[❯](red)"
+vicmd_symbol = "[❮](green)"
+
+[git_branch]
+symbol = "🌱 "
+format = "[$symbol$branch]($style) "
+style = "bright-green"
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "cyan"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+[python]
+symbol = "🐍 "
+format = '[$symbol$pyenv_prefix($version )(\($virtualenv\) )]($style)'
+
+[nodejs]
+symbol = "⬢ "
+format = '[$symbol($version )]($style)'
+EOF
+
+            export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
+            
+            cat > "$ZDOTDIR/.zshrc" << 'EOF'
+# Zsh configuration for EssayCoach development environment
+
+# Enable completion system
+autoload -U compinit && compinit
+
+# Source zsh plugins
+source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Add completions
+fpath=(${pkgs.zsh-completions}/share/zsh/site-functions $fpath)
+
+# ========== THEME CONFIGURATION ==========
+# Choose your theme by uncommenting ONE of the following options:
+
+# Option 1: Starship (Modern, fast, customizable)
+eval "$(${pkgs.starship}/bin/starship init zsh)"
+
+# Option 2: Powerlevel10k (Feature-rich, highly customizable)
+# source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+
+# Option 3: Spaceship (Minimalist, git-aware)
+# source ${pkgs.spaceship-prompt}/lib/spaceship.zsh-theme
+
+# Option 4: Oh-My-Zsh built-in themes
+# export ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh"
+# ZSH_THEME="robbyrussell"  # or "agnoster", "avit", "bira", etc.
+# source $ZSH/oh-my-zsh.sh
+
+# Basic zsh options
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+setopt AUTO_CD
+
+# Aliases for common development tasks
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Project-specific aliases (PGPORT will be available when PostgreSQL starts)
+alias pg-connect='psql -U essayadmin -d essaycoach -h localhost -p $PGPORT'
+alias pg-logs='tail -f .dev_pg/logfile'
+
+echo "🚀 EssayCoach development environment ready!"
+echo "📦 Zsh configured with autosuggestions and syntax highlighting"
+echo "💡 Useful aliases: ll, la, pg-connect, pg-logs"
+EOF
+
+            # Set zsh as the shell and execute it with our config
+            export SHELL=${pkgs.zsh}/bin/zsh
+            
             # ---------- Local PostgreSQL Dev Cluster ----------
             # This block ensures a self-contained PostgreSQL instance is available
             # whenever you run `nix develop`. It stores data in .dev_pg/
@@ -80,6 +206,8 @@
                   # Try to bind to the port using a simple TCP test
                   if ! (exec 3<>/dev/tcp/localhost/$port) 2>/dev/null; then
                     export PGPORT=$port
+                    exec 3<&-
+                    exec 3>&-
                     break
                   else
                     exec 3<&-
@@ -144,6 +272,9 @@
             # The 'trap' command ensures cleanup_on_exit is called when the shell exits.
             trap cleanup_on_exit EXIT
             # ---------------------------------------------------
+            
+            # Start zsh with our configuration
+            exec ${pkgs.zsh}/bin/zsh
           '';
         };
       });
