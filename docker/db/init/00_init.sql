@@ -110,7 +110,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 CREATE TABLE public.unit (
 	unit_id varchar(10) NOT NULL,
 	unit_name varchar(50) NOT NULL,
-	unit_desc varchar(100),
+	unit_desc text,
 	CONSTRAINT unit_pk PRIMARY KEY (unit_id)
 );
 -- ddl-end --
@@ -320,7 +320,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 CREATE TABLE public.rubric_item (
 	rubric_item_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 START WITH 1 CACHE 1 ),
 	rubric_id_marking_rubric integer NOT NULL,
-	rubric_item_name varchar(20) NOT NULL,
+	rubric_item_name varchar(50) NOT NULL,
 	rubric_item_weight numeric(3,1) NOT NULL,
 	CONSTRAINT item_weight_ck CHECK (rubric_item_weight > 0),
 	CONSTRAINT rubric_item_pk PRIMARY KEY (rubric_item_id)
@@ -353,7 +353,7 @@ CREATE TABLE public.rubric_level_desc (
 	rubric_item_id_rubric_item integer NOT NULL,
 	level_min_score smallint NOT NULL,
 	level_max_score smallint NOT NULL,
-	level_desc varchar(500) NOT NULL,
+	level_desc text NOT NULL,
 	CONSTRAINT min_max_ck CHECK (level_min_score >= 0 AND level_max_score > 0 AND level_min_score < level_max_score),
 	CONSTRAINT rubric_level_desc_pk PRIMARY KEY (level_desc_id)
 );
