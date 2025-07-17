@@ -32,15 +32,14 @@
           packages = with pkgs; [
             docker-compose
             docker
-            # Shell Configuration
-            zsh
-            zsh-autosuggestions
-            zsh-syntax-highlighting
-            zsh-completions
-            oh-my-zsh
-            starship
-            zsh-powerlevel10k
-            spaceship-prompt
+            # Shell enhancements
+            bash-completion
+            readline
+            fzf
+            bat
+            eza
+            tree
+            git
             # Frontend Development (Vue.js 3 + Vite)
             pnpm
             nodejs_22
@@ -62,119 +61,124 @@
             python311Packages.uvicorn
           ];
           shellHook = ''
-            # ---------- Zsh Configuration ----------
-            # Create a temporary zshrc for this session
-            export ZDOTDIR="$PWD/.nix-zsh"
-            mkdir -p "$ZDOTDIR"
+            # Force bash shell for this environment
+            export SHELL=${pkgs.bash}/bin/bash
             
-            # Create Starship configuration
-            cat > "$ZDOTDIR/starship.toml" << 'EOF'
-# Starship configuration for EssayCoach development
+            # ---------- Enhanced Bash Configuration ----------
+            
+            # Enable bash completion
+            if [ -f ${pkgs.bash-completion}/share/bash-completion/bash_completion ]; then
+                source ${pkgs.bash-completion}/share/bash-completion/bash_completion
+            fi
+            
+            # Enhanced readline configuration for better editing
+            export INPUTRC="$PWD/.nix-inputrc"
+            cat > "$INPUTRC" << 'EOF'
+# Enhanced readline configuration
+set editing-mode emacs
+set completion-ignore-case on
+set completion-map-case on
+set show-all-if-ambiguous on
+set completion-query-items 200
+set page-completions off
+set bell-style none
+set colored-stats on
+set colored-completion-prefix on
+set menu-complete-display-prefix on
 
-format = """
-$username\
-$hostname\
-$directory\
-$git_branch\
-$git_state\
-$git_status\
-$cmd_duration\
-$line_break\
-$python\
-$nodejs\
-$character"""
+# History search with arrow keys
+"\e[A": history-search-backward
+"\e[B": history-search-forward
 
-[directory]
-style = "blue"
+# Improved word movement
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
 
-[character]
-success_symbol = "[❯](purple)"
-error_symbol = "[❯](red)"
-vicmd_symbol = "[❮](green)"
-
-[git_branch]
-symbol = "🌱 "
-format = "[$symbol$branch]($style) "
-style = "bright-green"
-
-[git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "cyan"
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
-
-[cmd_duration]
-format = "[$duration]($style) "
-style = "yellow"
-
-[python]
-symbol = "🐍 "
-format = '[$symbol$pyenv_prefix($version )(\($virtualenv\) )]($style)'
-
-[nodejs]
-symbol = "⬢ "
-format = '[$symbol($version )]($style)'
+# Quick directory navigation
+"\C-l": clear-screen
 EOF
 
-            export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
+            # Enhanced bash history
+            export HISTCONTROL=ignoreboth:erasedups
+            export HISTSIZE=10000
+            export HISTFILESIZE=20000
+            export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
+            shopt -s histappend
+            shopt -s checkwinsize
+            shopt -s autocd
+            shopt -s cdspell
+            shopt -s dirspell
             
-            cat > "$ZDOTDIR/.zshrc" << 'EOF'
-# Zsh configuration for EssayCoach development environment
-
-# Enable completion system
-autoload -U compinit && compinit
-
-# Source zsh plugins
-source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Add completions
-fpath=(${pkgs.zsh-completions}/share/zsh/site-functions $fpath)
-
-# ========== THEME CONFIGURATION ==========
-# Choose your theme by uncommenting ONE of the following options:
-
-# Option 1: Starship (Modern, fast, customizable)
-eval "$(${pkgs.starship}/bin/starship init zsh)"
-
-# Option 2: Powerlevel10k (Feature-rich, highly customizable)
-# source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-
-# Option 3: Spaceship (Minimalist, git-aware)
-# source ${pkgs.spaceship-prompt}/lib/spaceship.zsh-theme
-
-# Option 4: Oh-My-Zsh built-in themes
-# export ZSH="${pkgs.oh-my-zsh}/share/oh-my-zsh"
-# ZSH_THEME="robbyrussell"  # or "agnoster", "avit", "bira", etc.
-# source $ZSH/oh-my-zsh.sh
-
-# Basic zsh options
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
-setopt SHARE_HISTORY
-setopt AUTO_CD
-
-# Aliases for common development tasks
-alias ll='ls -la'
-alias la='ls -A'
-alias l='ls -CF'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
-# Project-specific aliases (PGPORT will be available when PostgreSQL starts)
-alias pg-connect='psql -U essayadmin -d essaycoach -h localhost -p $PGPORT'
-alias pg-logs='tail -f .dev_pg/logfile'
-
-echo "🚀 EssayCoach development environment ready!"
-echo "📦 Zsh configured with autosuggestions and syntax highlighting"
-echo "💡 Useful aliases: ll, la, pg-connect, pg-logs"
-EOF
-
-            # Set zsh as the shell and execute it with our config
-            export SHELL=${pkgs.zsh}/bin/zsh
+            # Colorful and informative prompt
+            setup_prompt() {
+                # Colors
+                local RED='\[\033[0;31m\]'
+                local GREEN='\[\033[0;32m\]'
+                local YELLOW='\[\033[0;33m\]'
+                local BLUE='\[\033[0;34m\]'
+                local PURPLE='\[\033[0;35m\]'
+                local CYAN='\[\033[0;36m\]'
+                local WHITE='\[\033[0;37m\]'
+                local BOLD='\[\033[1m\]'
+                local RESET='\[\033[0m\]'
+                
+                # Git branch function
+                git_branch() {
+                    local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2)
+                    if [ "$branch" ]; then
+                        local status=""
+                        if ! git diff --quiet 2>/dev/null; then
+                            status=" ±"
+                        fi
+                        echo " ($branch$status)"
+                    fi
+                }
+                
+                # Set the prompt
+                PS1="$GREEN\u$WHITE@$BLUE\h$WHITE:$PURPLE\w$YELLOW\$(git_branch)$WHITE\$ $RESET"
+            }
+            
+            setup_prompt
+            
+            # Useful aliases with colors
+            alias ls='${pkgs.eza}/bin/eza --color=auto --icons'
+            alias ll='${pkgs.eza}/bin/eza -la --color=auto --icons --git'
+            alias la='${pkgs.eza}/bin/eza -a --color=auto --icons'
+            alias tree='${pkgs.eza}/bin/eza --tree --color=auto --icons'
+            alias cat='${pkgs.bat}/bin/bat --style=plain'
+            alias grep='grep --color=auto'
+            alias fgrep='fgrep --color=auto'
+            alias egrep='egrep --color=auto'
+            
+            # Enhanced directory navigation
+            alias ..='cd ..'
+            alias ...='cd ../..'
+            alias ....='cd ../../..'
+            alias ~='cd ~'
+            alias -- -='cd -'
+            
+            # File operations with confirmations
+            alias rm='rm -i'
+            alias cp='cp -i'
+            alias mv='mv -i'
+            
+            # Git aliases
+            alias gs='git status'
+            alias ga='git add'
+            alias gc='git commit'
+            alias gp='git push'
+            alias gl='git log --oneline'
+            alias gd='git diff'
+            
+            # FZF configuration for fuzzy finding
+            export FZF_DEFAULT_COMMAND='find . -type f -not -path "*/\.*" 2>/dev/null'
+            export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "${pkgs.bat}/bin/bat --color=always --style=numbers --line-range=:500 {}" 2>/dev/null'
+            
+            # Bind Ctrl+R to fzf history search
+            if command -v fzf >/dev/null 2>&1; then
+                bind '"\C-r": "\C-a hf \C-j"'
+                alias hf='history | ${pkgs.fzf}/bin/fzf --tac --no-sort | sed "s/^[[:space:]]*[0-9]*[[:space:]]*//" | tr -d "\n" | xargs -0 -I {} bash -c "{}"'
+            fi
             
             # ---------- Local PostgreSQL Dev Cluster ----------
             # This block ensures a self-contained PostgreSQL instance is available
@@ -277,12 +281,19 @@ EOF
 
             start_local_pg
 
+            # Project-specific aliases (PGPORT will be available when PostgreSQL starts)
+            alias pg-connect='psql -U essayadmin -d essaycoach -h localhost -p $PGPORT'
+            alias pg-logs='tail -f .dev_pg/logfile'
+            alias pg-status='pg_ctl -D "$PGDATA" status'
+            
             # The 'trap' command ensures cleanup_on_exit is called when the shell exits.
             trap cleanup_on_exit EXIT
-            # ---------------------------------------------------
             
-            # Start zsh with our configuration
-            exec ${pkgs.zsh}/bin/zsh
+            echo "🚀 EssayCoach development environment ready!"
+            echo "📦 Enhanced Bash with completions, colors, and shortcuts"
+            echo "💡 Useful aliases: ll, tree, cat (bat), pg-connect, pg-logs"
+            echo "🔍 Use Ctrl+R for fuzzy history search, 'hf' for history finder"
+            echo "📂 Current directory: $(pwd)"
           '';
         };
       });
