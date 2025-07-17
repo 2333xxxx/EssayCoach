@@ -249,6 +249,14 @@ EOF
                 else
                   echo "[dev-pg] Database already contains tables. Skipping schema load."
                 fi
+
+                echo "[dev-pg] Loading mock data..."
+                psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/01_add_data.sql >/dev/null 2>&1
+                if [ $? -eq 0 ]; then
+                  echo "[dev-pg] Mock data loaded successfully."
+                else
+                  echo "[dev-pg] WARNING: Failed to load mock data. You may need to load it manually."
+                fi
               else
                 # If already running, retrieve port from the pid file
                 export PGPORT=$(head -n 4 "$PGDATA/postmaster.pid" | tail -n 1)
