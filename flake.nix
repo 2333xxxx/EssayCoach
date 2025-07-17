@@ -244,22 +244,29 @@ EOF
                 # Load schema if database is empty (no tables exist)
                 if ! psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -tc "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1;" | grep -q 1; then
                   echo "[dev-pg] Loading database schema..."
-                  psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/00_init.sql >/dev/null 2>&1
-                  if [ $? -eq 0 ]; then
+                  schema_stderr=$(psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/00_init.sql 2>&1 >/dev/null)
+                  schema_exit_code=$?
+                  if [ $schema_exit_code -eq 0 ]; then
                     echo "[dev-pg] Schema loaded successfully."
                   else
-                    echo "[dev-pg] WARNING: Failed to load schema. You may need to load it manually."
+                    echo "[dev-pg] ERROR: Failed to load schema. Details:"
+                    echo "$schema_stderr"
                   fi
                 else
                   echo "[dev-pg] Database already contains tables. Skipping schema load."
                 fi
 
                 echo "[dev-pg] Loading mock data..."
-                psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/01_add_data.sql >/dev/null 2>&1
-                if [ $? -eq 0 ]; then
+                # Execute psql, capturing stderr. stdout is discarded.
+                # The command substitution exit status is the one of psql.
+                psql_stderr=$(psql -U essayadmin -p "$PGPORT" -h "$PGHOST" -d essaycoach -f docker/db/init/01_add_data.sql 2>&1 >/dev/null)
+                psql_exit_code=$?
+
+                if [ $psql_exit_code -eq 0 ]; then
                   echo "[dev-pg] Mock data loaded successfully."
                 else
-                  echo "[dev-pg] WARNING: Failed to load mock data. You may need to load it manually."
+                  echo "[dev-pg] ERROR: Failed to load mock data. Details:"
+                  echo "$psql_stderr"
                 fi
               else
                 # If already running, retrieve port from the pid file
