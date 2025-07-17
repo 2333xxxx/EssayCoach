@@ -32,14 +32,9 @@ DROP TABLE IF EXISTS public."user" CASCADE;
 
 -- object: essaycoach | type: DATABASE --
 -- DROP DATABASE IF EXISTS essaycoach;
-CREATE DATABASE essaycoach;
--- ddl-end --
 
 
 SET check_function_bodies = false;
--- ddl-end --
-
-SET search_path TO pg_catalog,public;
 -- ddl-end --
 
 -- object: public."user" | type: TABLE --
@@ -50,7 +45,7 @@ CREATE TABLE public."user" (
 	user_lname varchar(20),
 	user_email varchar(50),
 	user_role varchar(10),
-	user_status varchar(10),
+	user_status varchar(15),
 	user_credential varchar(255),
 	CONSTRAINT user_pk PRIMARY KEY (user_id),
 	CONSTRAINT user_email_uq UNIQUE (user_email),
@@ -58,25 +53,25 @@ CREATE TABLE public."user" (
 	CONSTRAINT user_status_ck CHECK (user_status IN ('active', 'suspended', 'unregistered'))
 );
 -- ddl-end --
-COMMENT ON TABLE public."user" IS E'A table for all user entities, including student, teacher, and admins.';
+COMMENT ON TABLE public."user" IS 'A table for all user entities, including student, teacher, and admins.';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_id IS E'Unique user identifiers. Student ids are obtainable from the teaching system, while lecturers and admins are assigned other unique ids.';
+COMMENT ON COLUMN public."user".user_id IS 'Unique user identifiers. Student ids are obtainable from the teaching system, while lecturers and admins are assigned other unique ids.';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_fname IS E'User firstname';
+COMMENT ON COLUMN public."user".user_fname IS 'User firstname';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_lname IS E'User lastname';
+COMMENT ON COLUMN public."user".user_lname IS 'User lastname';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_email IS E'User email, required for resetting password. Unique constraint applied.';
+COMMENT ON COLUMN public."user".user_email IS 'User email, required for resetting password. Unique constraint applied.';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_role IS E'User role: student, lecturer, and admin';
+COMMENT ON COLUMN public."user".user_role IS 'User role: student, lecturer, and admin';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_status IS E'User status: active, suspended, or unregistered';
+COMMENT ON COLUMN public."user".user_status IS 'User status: active, suspended, or unregistered';
 -- ddl-end --
-COMMENT ON COLUMN public."user".user_credential IS E'Hashed credential for user';
+COMMENT ON COLUMN public."user".user_credential IS 'Hashed credential for user';
 -- ddl-end --
-COMMENT ON CONSTRAINT user_email_uq ON public."user" IS E'User emails must be unique for resetting password for account';
+COMMENT ON CONSTRAINT user_email_uq ON public."user" IS 'User emails must be unique for resetting password for account';
 -- ddl-end --
-COMMENT ON CONSTRAINT user_role_ck ON public."user" IS E'User role are designated to be one of student, lecturer, and admin';
+COMMENT ON CONSTRAINT user_role_ck ON public."user" IS 'User role are designated to be one of student, lecturer, and admin';
 -- ddl-end --
 COMMENT ON CONSTRAINT user_status_ck ON public."user" IS E'user status:\nactive: normal\nsuspended: registered by baned from login\nunregistered: added to DB but not create account yet';
 -- ddl-end --
@@ -94,11 +89,11 @@ CREATE TABLE public.enrollment (
 	CONSTRAINT enrollment_pk PRIMARY KEY (enrollment_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.enrollment IS E'The enrollment of student to a specific class. A student can only have one enrollment to one class of one unit anytime.';
+COMMENT ON TABLE public.enrollment IS 'The enrollment of student to a specific class. A student can only have one enrollment to one class of one unit anytime.';
 -- ddl-end --
-COMMENT ON COLUMN public.enrollment.enrollment_id IS E'Unique identifier for each enrollment';
+COMMENT ON COLUMN public.enrollment.enrollment_id IS 'Unique identifier for each enrollment';
 -- ddl-end --
-COMMENT ON COLUMN public.enrollment.enrollment_time IS E'The time when the student is enrolled in the DBMS';
+COMMENT ON COLUMN public.enrollment.enrollment_time IS 'The time when the student is enrolled in the DBMS';
 -- ddl-end --
 ALTER TABLE public.enrollment OWNER TO postgres;
 -- ddl-end --
@@ -114,18 +109,18 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- DROP TABLE IF EXISTS public.unit CASCADE;
 CREATE TABLE public.unit (
 	unit_id varchar(10) NOT NULL,
-	unit_name varchar(30) NOT NULL,
-	unit_desc varchar(50),
+	unit_name varchar(50) NOT NULL,
+	unit_desc varchar(100),
 	CONSTRAINT unit_pk PRIMARY KEY (unit_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.unit IS E'A table for unit entity';
+COMMENT ON TABLE public.unit IS 'A table for unit entity';
 -- ddl-end --
-COMMENT ON COLUMN public.unit.unit_id IS E'Unique identifier for each unit, same as the unit code';
+COMMENT ON COLUMN public.unit.unit_id IS 'Unique identifier for each unit, same as the unit code';
 -- ddl-end --
-COMMENT ON COLUMN public.unit.unit_name IS E'Full name of the unit';
+COMMENT ON COLUMN public.unit.unit_name IS 'Full name of the unit';
 -- ddl-end --
-COMMENT ON COLUMN public.unit.unit_desc IS E'details of the unit';
+COMMENT ON COLUMN public.unit.unit_desc IS 'details of the unit';
 -- ddl-end --
 ALTER TABLE public.unit OWNER TO postgres;
 -- ddl-end --
@@ -140,13 +135,13 @@ CREATE TABLE public.class (
 	CONSTRAINT class_size_ck CHECK (class_size >= 0)
 );
 -- ddl-end --
-COMMENT ON TABLE public.class IS E'A table for class entity';
+COMMENT ON TABLE public.class IS 'A table for class entity';
 -- ddl-end --
-COMMENT ON COLUMN public.class.class_id IS E'Unique identifier for a class under a unit';
+COMMENT ON COLUMN public.class.class_id IS 'Unique identifier for a class under a unit';
 -- ddl-end --
-COMMENT ON COLUMN public.class.class_size IS E'current number of students in the class';
+COMMENT ON COLUMN public.class.class_size IS 'current number of students in the class';
 -- ddl-end --
-COMMENT ON CONSTRAINT class_size_ck ON public.class IS E'Class size must be non-negative';
+COMMENT ON CONSTRAINT class_size_ck ON public.class IS 'Class size must be non-negative';
 -- ddl-end --
 ALTER TABLE public.class OWNER TO postgres;
 -- ddl-end --
@@ -181,7 +176,7 @@ $function$;
 -- ddl-end --
 ALTER FUNCTION public.increase_class_size() OWNER TO postgres;
 -- ddl-end --
-COMMENT ON FUNCTION public.increase_class_size() IS E'Add class size by one after an enrollment to a class is triggered';
+COMMENT ON FUNCTION public.increase_class_size() IS 'Add class size by one after an enrollment to a class is triggered';
 -- ddl-end --
 
 -- object: trg_increment_class_size | type: TRIGGER --
@@ -192,7 +187,7 @@ CREATE OR REPLACE TRIGGER trg_increment_class_size
 	FOR EACH ROW
 	EXECUTE PROCEDURE public.increase_class_size();
 -- ddl-end --
-COMMENT ON TRIGGER trg_increment_class_size ON public.enrollment IS E'increase class size by 1 after student enroll';
+COMMENT ON TRIGGER trg_increment_class_size ON public.enrollment IS 'increase class size by 1 after student enroll';
 -- ddl-end --
 
 -- object: public.task | type: TABLE --
@@ -207,13 +202,13 @@ CREATE TABLE public.task (
 	CONSTRAINT task_publish_time_task_due_time_ck CHECK (task_publish_datetime < task_due_datetime)
 );
 -- ddl-end --
-COMMENT ON TABLE public.task IS E'Task created by lecturer/admin for students in some classes/units to complete';
+COMMENT ON TABLE public.task IS 'Task created by lecturer/admin for students in some classes/units to complete';
 -- ddl-end --
-COMMENT ON COLUMN public.task.task_id IS E'Unique identifier for task.';
+COMMENT ON COLUMN public.task.task_id IS 'Unique identifier for task.';
 -- ddl-end --
-COMMENT ON COLUMN public.task.task_publish_datetime IS E'time/date when the task is published';
+COMMENT ON COLUMN public.task.task_publish_datetime IS 'time/date when the task is published';
 -- ddl-end --
-COMMENT ON COLUMN public.task.task_due_datetime IS E'time/date when the task is due';
+COMMENT ON COLUMN public.task.task_due_datetime IS 'time/date when the task is due';
 -- ddl-end --
 ALTER TABLE public.task OWNER TO postgres;
 -- ddl-end --
@@ -236,7 +231,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ALTER TABLE public.enrollment DROP CONSTRAINT IF EXISTS user_id_class_id_unit_id_uq CASCADE;
 ALTER TABLE public.enrollment ADD CONSTRAINT user_id_class_id_unit_id_uq UNIQUE (user_id_user,class_id_class,unit_id_unit);
 -- ddl-end --
-COMMENT ON CONSTRAINT user_id_class_id_unit_id_uq ON public.enrollment IS E'Every student can only enrolled to a specific class of a unit once';
+COMMENT ON CONSTRAINT user_id_class_id_unit_id_uq ON public.enrollment IS 'Every student can only enrolled to a specific class of a unit once';
 -- ddl-end --
 
 
@@ -249,9 +244,9 @@ CREATE TABLE public.teaching_assn (
 	CONSTRAINT teaching_assn_pk PRIMARY KEY (teaching_assn_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.teaching_assn IS E'A weak entity for assignment of teacher to classes';
+COMMENT ON TABLE public.teaching_assn IS 'A weak entity for assignment of teacher to classes';
 -- ddl-end --
-COMMENT ON COLUMN public.teaching_assn.teaching_assn_id IS E'unique identifier';
+COMMENT ON COLUMN public.teaching_assn.teaching_assn_id IS 'unique identifier';
 -- ddl-end --
 ALTER TABLE public.teaching_assn OWNER TO postgres;
 -- ddl-end --
@@ -274,7 +269,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ALTER TABLE public.teaching_assn DROP CONSTRAINT IF EXISTS lecturer_id_class_id_uq CASCADE;
 ALTER TABLE public.teaching_assn ADD CONSTRAINT lecturer_id_class_id_uq UNIQUE (user_id_user,class_id_class);
 -- ddl-end --
-COMMENT ON CONSTRAINT lecturer_id_class_id_uq ON public.teaching_assn IS E'One lecturer can only be assigned to a class once';
+COMMENT ON CONSTRAINT lecturer_id_class_id_uq ON public.teaching_assn IS 'One lecturer can only be assigned to a class once';
 -- ddl-end --
 
 
@@ -295,13 +290,13 @@ CREATE TABLE public.marking_rubric (
 	CONSTRAINT marking_rubric_pk PRIMARY KEY (rubric_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.marking_rubric IS E'entity for a marking rubric. A marking rubric has many items.';
+COMMENT ON TABLE public.marking_rubric IS 'entity for a marking rubric. A marking rubric has many items.';
 -- ddl-end --
-COMMENT ON COLUMN public.marking_rubric.rubric_id IS E'unique identifier for rubrics';
+COMMENT ON COLUMN public.marking_rubric.rubric_id IS 'unique identifier for rubrics';
 -- ddl-end --
-COMMENT ON COLUMN public.marking_rubric.rubric_create_time IS E'timestamp when the rubirc is created';
+COMMENT ON COLUMN public.marking_rubric.rubric_create_time IS 'timestamp when the rubirc is created';
 -- ddl-end --
-COMMENT ON COLUMN public.marking_rubric.rubric_desc IS E'description to the rubrics';
+COMMENT ON COLUMN public.marking_rubric.rubric_desc IS 'description to the rubrics';
 -- ddl-end --
 ALTER TABLE public.marking_rubric OWNER TO postgres;
 -- ddl-end --
@@ -331,15 +326,15 @@ CREATE TABLE public.rubric_item (
 	CONSTRAINT rubric_item_pk PRIMARY KEY (rubric_item_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.rubric_item IS E'An item(dimension) under one rubric';
+COMMENT ON TABLE public.rubric_item IS 'An item(dimension) under one rubric';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_item.rubric_item_id IS E'unique identifier for item';
+COMMENT ON COLUMN public.rubric_item.rubric_item_id IS 'unique identifier for item';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_item.rubric_item_name IS E'Title(header) name for the item';
+COMMENT ON COLUMN public.rubric_item.rubric_item_name IS 'Title(header) name for the item';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_item.rubric_item_weight IS E'the weight of the item on a scale of 100%, using xx.x';
+COMMENT ON COLUMN public.rubric_item.rubric_item_weight IS 'the weight of the item on a scale of 100%, using xx.x';
 -- ddl-end --
-COMMENT ON CONSTRAINT item_weight_ck ON public.rubric_item IS E'weight must be greater than 0';
+COMMENT ON CONSTRAINT item_weight_ck ON public.rubric_item IS 'weight must be greater than 0';
 -- ddl-end --
 ALTER TABLE public.rubric_item OWNER TO postgres;
 -- ddl-end --
@@ -363,13 +358,13 @@ CREATE TABLE public.rubric_level_desc (
 	CONSTRAINT rubric_level_desc_pk PRIMARY KEY (level_desc_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.rubric_level_desc IS E'The detailed description to each of the score range under a rubric item under a rubric.';
+COMMENT ON TABLE public.rubric_level_desc IS 'The detailed description to each of the score range under a rubric item under a rubric.';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_level_desc.level_desc_id IS E'unique identifier for each level desc under one rubric';
+COMMENT ON COLUMN public.rubric_level_desc.level_desc_id IS 'unique identifier for each level desc under one rubric';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_level_desc.level_min_score IS E'min for the item';
+COMMENT ON COLUMN public.rubric_level_desc.level_min_score IS 'min for the item';
 -- ddl-end --
-COMMENT ON COLUMN public.rubric_level_desc.level_max_score IS E'max for the item';
+COMMENT ON COLUMN public.rubric_level_desc.level_max_score IS 'max for the item';
 -- ddl-end --
 ALTER TABLE public.rubric_level_desc OWNER TO postgres;
 -- ddl-end --
@@ -392,13 +387,13 @@ CREATE TABLE public.submission (
 	CONSTRAINT submission_pk PRIMARY KEY (submission_id)
 );
 -- ddl-end --
-COMMENT ON TABLE public.submission IS E'A weal entity for task submissions.';
+COMMENT ON TABLE public.submission IS 'A weal entity for task submissions.';
 -- ddl-end --
-COMMENT ON COLUMN public.submission.submission_id IS E'unique identifier for submission';
+COMMENT ON COLUMN public.submission.submission_id IS 'unique identifier for submission';
 -- ddl-end --
-COMMENT ON COLUMN public.submission.submission_time IS E'time/date of submission';
+COMMENT ON COLUMN public.submission.submission_time IS 'time/date of submission';
 -- ddl-end --
-COMMENT ON COLUMN public.submission.submission_txt IS E'complete content of the essay submission';
+COMMENT ON COLUMN public.submission.submission_txt IS 'complete content of the essay submission';
 -- ddl-end --
 ALTER TABLE public.submission OWNER TO postgres;
 -- ddl-end --
@@ -428,13 +423,13 @@ CREATE TABLE public.feedback_item (
 	CONSTRAINT feedback_item_source_ck CHECK (feedback_item_source IN ('ai', 'human', 'revised'))
 );
 -- ddl-end --
-COMMENT ON TABLE public.feedback_item IS E'A section in the feedback as per the rubric';
+COMMENT ON TABLE public.feedback_item IS 'A section in the feedback as per the rubric';
 -- ddl-end --
-COMMENT ON COLUMN public.feedback_item.feedback_item_id IS E'unique identifier for feedback item';
+COMMENT ON COLUMN public.feedback_item.feedback_item_id IS 'unique identifier for feedback item';
 -- ddl-end --
-COMMENT ON COLUMN public.feedback_item.feedback_item_score IS E'actual score of the item';
+COMMENT ON COLUMN public.feedback_item.feedback_item_score IS 'actual score of the item';
 -- ddl-end --
-COMMENT ON COLUMN public.feedback_item.feedback_item_comment IS E'short description to the sub-item grade';
+COMMENT ON COLUMN public.feedback_item.feedback_item_comment IS 'short description to the sub-item grade';
 -- ddl-end --
 COMMENT ON COLUMN public.feedback_item.feedback_item_source IS E'the source of feedback: \nai, human, or revised if ai feedback is slightly modifed by human';
 -- ddl-end --
