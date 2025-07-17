@@ -218,7 +218,7 @@ CREATE TABLE public.submission (
 	submission_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 1 MINVALUE 0 MAXVALUE 2147483647 START WITH 1 CACHE 1 ),
 	submission_time timestamp DEFAULT now(),
 	task_id_task integer NOT NULL,
-	user_id_user integer,
+	user_id_user integer, NOT NULL,
 	submission_txt text NOT NULL,
 	CONSTRAINT submission_pk PRIMARY KEY (submission_id)
 );
