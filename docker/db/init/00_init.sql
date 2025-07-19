@@ -102,7 +102,7 @@ ALTER TABLE public.enrollment OWNER TO postgres;
 -- ALTER TABLE public.enrollment DROP CONSTRAINT IF EXISTS user_enrollment_fk CASCADE;
 ALTER TABLE public.enrollment ADD CONSTRAINT user_enrollment_fk FOREIGN KEY (user_id_user)
 REFERENCES public."user" (user_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: public.unit | type: TABLE --
@@ -252,7 +252,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ALTER TABLE public.class DROP CONSTRAINT IF EXISTS unit_class_fk CASCADE;
 ALTER TABLE public.class ADD CONSTRAINT unit_class_fk FOREIGN KEY (unit_id_unit)
 REFERENCES public.unit (unit_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: user_id_class_id_unit_id_uq | type: CONSTRAINT --
@@ -283,7 +283,7 @@ ALTER TABLE public.teaching_assn OWNER TO postgres;
 -- ALTER TABLE public.teaching_assn DROP CONSTRAINT IF EXISTS user_teaching_assn_fk CASCADE;
 ALTER TABLE public.teaching_assn ADD CONSTRAINT user_teaching_assn_fk FOREIGN KEY (user_id_user)
 REFERENCES public."user" (user_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: class_teaching_assn_fk | type: CONSTRAINT --
@@ -333,14 +333,14 @@ ALTER TABLE public.marking_rubric OWNER TO postgres;
 -- ALTER TABLE public.task DROP CONSTRAINT IF EXISTS marking_rubric_task_fk CASCADE;
 ALTER TABLE public.task ADD CONSTRAINT marking_rubric_task_fk FOREIGN KEY (rubric_id_marking_rubric)
 REFERENCES public.marking_rubric (rubric_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: user_marking_rubric_fk | type: CONSTRAINT --
 -- ALTER TABLE public.marking_rubric DROP CONSTRAINT IF EXISTS user_marking_rubric_fk CASCADE;
 ALTER TABLE public.marking_rubric ADD CONSTRAINT user_marking_rubric_fk FOREIGN KEY (user_id_user)
 REFERENCES public."user" (user_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: public.rubric_item | type: TABLE --
@@ -371,7 +371,7 @@ ALTER TABLE public.rubric_item OWNER TO postgres;
 -- ALTER TABLE public.rubric_item DROP CONSTRAINT IF EXISTS marking_rubric_rubric_item_fk CASCADE;
 ALTER TABLE public.rubric_item ADD CONSTRAINT marking_rubric_rubric_item_fk FOREIGN KEY (rubric_id_marking_rubric)
 REFERENCES public.marking_rubric (rubric_id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: public.rubric_level_desc | type: TABLE --
