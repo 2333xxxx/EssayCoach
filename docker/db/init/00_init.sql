@@ -153,8 +153,6 @@ REFERENCES public.class (class_id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: public.increase_class_size | type: FUNCTION --
--- DROP FUNCTION IF EXISTS public.increase_class_size() CASCADE;
 CREATE OR REPLACE FUNCTION public.increase_class_size ()
 	RETURNS trigger
 	LANGUAGE plpgsql
@@ -173,21 +171,51 @@ BEGIN
 END;
 
 $function$;
--- ddl-end --
 ALTER FUNCTION public.increase_class_size() OWNER TO postgres;
--- ddl-end --
 COMMENT ON FUNCTION public.increase_class_size() IS 'Add class size by one after an enrollment to a class is triggered';
+
+-- object: public.decrease_class_size | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.decrease_class_size() CASCADE;
+CREATE OR REPLACE FUNCTION public.decrease_class_size ()
+	RETURNS trigger
+	LANGUAGE plpgsql
+	VOLATILE
+	CALLED ON NULL INPUT
+	SECURITY INVOKER
+	PARALLEL UNSAFE
+	COST 1
+	AS 
+$function$
+BEGIN
+  UPDATE class
+  SET class_size = class_size - 1
+  WHERE class_id = OLD.class_id_class;
+  RETURN OLD;
+END;
+
+$function$;
+-- ddl-end --
+ALTER FUNCTION public.decrease_class_size() OWNER TO postgres;
+-- ddl-end --
+COMMENT ON FUNCTION public.decrease_class_size() IS 'Decrease class size by one after an unenrollment from a class is triggered';
 -- ddl-end --
 
--- object: trg_increment_class_size | type: TRIGGER --
--- DROP TRIGGER IF EXISTS trg_increment_class_size ON public.enrollment CASCADE;
 CREATE OR REPLACE TRIGGER trg_increment_class_size
 	AFTER INSERT 
 	ON public.enrollment
 	FOR EACH ROW
 	EXECUTE PROCEDURE public.increase_class_size();
--- ddl-end --
 COMMENT ON TRIGGER trg_increment_class_size ON public.enrollment IS 'increase class size by 1 after student enroll';
+
+-- object: trg_decrement_class_size | type: TRIGGER --
+-- DROP TRIGGER IF EXISTS trg_decrement_class_size ON public.enrollment CASCADE;
+CREATE OR REPLACE TRIGGER trg_decrement_class_size
+	AFTER DELETE
+	ON public.enrollment
+	FOR EACH ROW
+	EXECUTE PROCEDURE public.decrease_class_size();
+-- ddl-end --
+COMMENT ON TRIGGER trg_decrement_class_size ON public.enrollment IS 'decrease class size by 1 after student unenroll';
 -- ddl-end --
 
 -- object: public.task | type: TABLE --
