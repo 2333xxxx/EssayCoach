@@ -1,0 +1,59 @@
+welcome:
+  morning: Morning, sunshine.
+  night: Night, moonlight knights.
+author: Rainie
+team: Showy
+intro: Satan's daughter fell in love, tears in her eyes as she left. She loved the boy in the white shirt, dreaming of becoming human, a forbidden desire.
+login:
+  title: Login
+menu:
+  start:
+    title: Start
+    welcome: Welcome
+    components: Components
+    builtin-pages: BuiltinPages
+  guide: Guide
+  about:
+    title: About
+    author: Author
+    project: Project
+  github: Github
+  profile: Profile
+  settings: Settings
+theme:
+  themeDrawerTitle: Theme & Layout
+  darkMode:
+    title: Theme Schema
+    light: Light
+    dark: Dark
+    system: System
+page:
+  about:
+    title: About
+    introduction: Showy
+    projectInfo:
+      title: Project Information
+      version: Current Version
+      latestBuildTime: Build Time
+      githubLink: Project
+      previewLink: Preview
+    prdDep: Production Dependency
+    devDep: Development Dependency
+profileMenu:
+  profile: Profile
+  settings: Setting
+  logout: Logout
+common:
+  backToHome: Back to Home
+fallback:
+  forbidden: Oops! Access Denied
+  forbiddenDesc: Sorry, you don't have permission to access this page.
+  pageNotFound: Oops! Page Not Found
+  pageNotFoundDesc: Sorry, the page you are looking for does not exist.
+  internalError: Oops! Something Went Wrong
+  internalErrorDesc: Sorry, there was a server error. Please try again later.
+  offlineError: Oops! Network Error
+  offlineErrorDesc: Sorry, unable to connect to the internet. Please check your network and try again.
+  componentMissing: Oops! Component Missing
+  componentMissingDesc: Sorry, a necessary component is missing. Please contact support.
+  comingSoon: Coming Soon, Stay Tuned

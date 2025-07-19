@@ -1,0 +1,59 @@
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-Regular.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-Regular.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-Bold.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-Bold.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-Light.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-Light.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-Italic.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-Italic.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-BoldItalic.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-BoldItalic.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'DSEG7ModernMini';
+  src:
+    url('@/assets/fonts/DSEG7ModernMini-LightItalic.woff2') format('woff2'),
+    url('@/assets/fonts/DSEG7ModernMini-LightItalic.woff') format('woff'),
+    url('@/assets/fonts/DSEG7ModernMini-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
