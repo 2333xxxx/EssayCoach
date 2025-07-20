@@ -19,7 +19,9 @@
   },
   "website": "https://naive-template.git.showyou.dev",
   "scripts": {
-    "dev": "pnpm vite",
+    "dev": "concurrently \"pnpm run dev:frontend\" \"pnpm run dev:backend\"",
+    "dev:frontend": "pnpm vite",
+    "dev:backend": "cd ../backend && python manage.py runserver",
     "build": "pnpm vite build",
     "build:docker": "vite build --mode docker",
     "preview": "pnpm run build && vite preview",
@@ -54,6 +56,7 @@
     "@unocss/eslint-config": "^0.63.6",
     "@unocss/preset-rem-to-px": "^0.63.6",
     "@vitejs/plugin-vue": "^5.1.4",
+    "concurrently": "^9.2.0",
     "eslint": "^9.13.0",
     "eslint-plugin-format": "^0.1.2",
     "husky": "^9.1.6",
