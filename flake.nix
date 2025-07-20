@@ -50,15 +50,15 @@
 
             # Backend Development (Python FastAPI + AI/ML)
             postgresql # database
-            python311
-            python311Packages.pip
-            python311Packages.virtualenv
+            python312
             black
-            python311Packages.flake8
-            python311Packages.mypy
-            python311Packages.django
-            python311Packages.fastapi
-            python311Packages.uvicorn
+            python312Packages.flake8
+            python312Packages.mypy
+            python312Packages.django
+            python312Packages.psycopg2-binary
+            python312Packages.django-cors-headers
+            python312Packages.fastapi
+            python312Packages.uvicorn
           ];
           shellHook = ''
             # Force bash shell for this environment
