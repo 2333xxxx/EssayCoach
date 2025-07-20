@@ -1,0 +1,88 @@
+{
+  "rootRoutes": [
+    {
+      "path": "start",
+      "name": "start",
+      "title": "menu.start.title",
+      "icon": "i-carbon:rocket",
+      "redirect": "/start/welcome",
+      "children": [
+        {
+          "path": "welcome",
+          "name": "welcome",
+          "title": "menu.start.welcome",
+          "component": "@/views/welcome",
+          "icon": "i-carbon:face-wink"
+        },
+        {
+          "path": "components",
+          "name": "components",
+          "title": "menu.start.components",
+          "component": "@/views/components",
+          "icon": "i-carbon:volume-block-storage"
+        },
+        {
+          "path": "builtin-pages",
+          "name": "builtin-pages",
+          "title": "menu.start.builtin-pages",
+          "icon": "i-carbon:page-scroll",
+          "children": [
+            { "path": "403", "name": "403", "title": "403", "component": "fallback/403", "icon": "i-carbon:number-3" },
+            { "path": "404", "name": "404", "title": "404", "component": "fallback/404", "icon": "i-carbon:number-4" },
+            { "path": "500", "name": "500", "title": "500", "component": "fallback/500", "icon": "i-carbon:number-5" },
+            { "path": "offline", "name": "offline", "title": "offline", "component": "fallback/offline", "icon": "i-carbon:number-5" },
+            {
+              "path": "coming-soon",
+              "name": "coming-soon",
+              "title": "coming-soon",
+              "component": "fallback/coming-soon",
+              "icon": "i-carbon:number-5"
+            },
+            {
+              "path": "missing",
+              "name": "missing",
+              "title": "missing",
+              "component": "fallback/component-missing",
+              "icon": "i-carbon:face-dissatisfied"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "guide",
+      "name": "guide",
+      "title": "menu.guide",
+      "icon": "i-carbon:book",
+      "children": [
+        { "path": "g403", "name": "g403", "title": "g403", "component": "fallback/403", "icon": "i-carbon:number-3" },
+        { "path": "g404", "name": "g404", "title": "g404", "component": "fallback/404", "icon": "i-carbon:number-4" },
+        { "path": "g500", "name": "g500", "title": "g500", "component": "fallback/500", "icon": "i-carbon:number-5" }
+      ]
+    },
+    {
+      "path": "about",
+      "name": "about",
+      "title": "menu.about.title",
+      "icon": "i-carbon:ibm-watsonx-code-assistant-for-z-refactor",
+      "component": "@/views/about"
+    },
+    {
+      "path": "profile",
+      "name": "profile",
+      "title": "menu.profile",
+      "icon": "i-carbon:user-avatar",
+      "component": "@/views/welcome",
+      "hidden": true
+    },
+    {
+      "path": "settings",
+      "name": "settings",
+      "title": "menu.settings",
+      "icon": "i-carbon:settings",
+      "component": "@/views/welcome",
+      "hidden": true
+    }
+  ],
+  "publicRoutes": [{ "path": "/login", "name": "login", "title": "login.title", "component": "login" }]
+}

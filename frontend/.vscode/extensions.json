@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    // Volar：Vue 3 + Vite 的 IDE 支持
+    "Vue.volar",
+    // ESLint：用于在 JavaScript 代码中进行静态代码分析，提高代码质量潜在的 bug，并允许定义和配置各种代码规范，包括缩进、变量命名、代码风格、最佳实践等
+    "dbaeumer.vscode-eslint",
+    // Prettier：流行的代码格式化工具
+    "esbenp.prettier-vscode",
+    // Stylelint：CSS的代码风格和语法的静态分析工具，支持 CSS、SCSS、Less 等，专注于样式表代码质量和规范
+    "stylelint.vscode-stylelint",
+    // Dotenv：env环境变量的语法高亮
+    "mikestead.dotenv",
+    // UnoCSS：UnoCSS 是一个轻量级的 CSS 预处理工具，它使用 JavaScript 代码生成 CSS，从而减少重复工作。
+    "antfu.unocss",
+    // Iconify IntelliSense：内联显示图标、自动完成等
+    // "antfu.iconify",
+    // 配合自动导入插件使用，跳转到别名定义位置
+    "antfu.goto-alias",
+    // 拼写检查
+    "streetsidesoftware.code-spell-checker"
+  ]
+}

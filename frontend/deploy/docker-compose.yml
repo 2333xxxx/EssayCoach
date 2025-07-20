@@ -1,0 +1,17 @@
+version: '3'
+services:
+  watchtower:
+    image: containrrr/watchtower:1.5.3
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro # 让容器使用与宿主机相同的时区
+      - /usr/docker_auth.json:/config.json # 私有仓储的认证信息
+    environment:
+      REPO_USER: username
+      REPO_PASS: password
+      WATCHTOWER_POLL_INTERVAL: 30 # 检查间隔时间，单位秒。也可以使用command: -i 30
+      WATCHTOWER_CLEANUP: true # 删除旧镜像，否则长时间恐撑爆硬盘。也可以使用command: --cleanup
+      WATCHTOWER_DISABLE_CONTAINERS: watchtower portainer nginxui
+    command: mywebapi

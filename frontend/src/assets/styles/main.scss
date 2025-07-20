@@ -1,0 +1,18 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+html.dark,
+html[data-theme='dark'] {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #121212;
+  color-scheme: dark;
+}
+
+.n-popover.n-tooltip.n-menu-tooltip {
+  display: none !important;
+}

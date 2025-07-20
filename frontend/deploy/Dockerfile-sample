@@ -1,0 +1,43 @@
+# Stage 1: 构建Vue项目
+FROM node:20-alpine AS build-stage
+WORKDIR /app
+
+# 设置--max-old-space-size
+ENV NODE_OPTIONS=--max-old-space-size=16384
+
+# 安装pnpm
+RUN npm install -g pnpm
+
+# 复制package.json和pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
+
+# 安装项目依赖
+RUN pnpm install --frozen-lockfile
+
+# 复制项目文件
+COPY . .
+
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
+# 构建项目
+RUN pnpm build
+
+RUN echo "🎉 编 🎉 译 🎉 成 🎉 功 🎉"
+
+# Stage 2: 设置Nginx来服务Vue项目
+FROM nginx:stable-alpine AS production-stage
+
+# 将构建好的文件从构建阶段复制到Nginx的服务目录
+COPY --from=build-stage /app/dist/ /usr/share/nginx/html
+COPY --from=build-stage /app/deploy/nginx.conf /etc/nginx/nginx.conf
+COPY --from=build-stage /app/deploy/nginx_default.conf /etc/nginx/conf.d/default.conf
+
+# 暴露80端口
+EXPOSE 80
+
+# 运行Nginx并保持前台运行
+CMD ["nginx", "-g", "daemon off;"]
+
+RUN echo "🎉 架 🎉 设 🎉 成 🎉 功 🎉"
+
+# 改为LF

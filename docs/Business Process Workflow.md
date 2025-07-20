@@ -6,7 +6,7 @@ This document formalises, in developer-friendly language, the **end-to-end busin
 ## 2. Actors & Responsibilities
 | Actor | Responsibility |
 |-------|---------------|
-| **Student** | Submits drafts, reviews AI reports, iterates revisions. |
+| **Student** | Submits a single essay per task, reviews AI reports, performs inline edits after grading; may replace submission only if teacher returns it. |
 | **Teacher** | Creates tasks, defines rubrics, monitors progress, issues final grades. |
 | **Administrator** | Manages users, global settings, feature toggles, compliance. |
 | **Frontend (Vue SPA)** | Collects user input, renders dashboards, orchestrates client-side state. |
@@ -37,6 +37,14 @@ sequenceDiagram
     AES-->>-MQ: ack
     MQ->>+Frontend: WebSocket <EvaluationCompleted>
     Frontend-->>Student: Render interactive report
+    alt Teacher returns for revision
+        Teacher->>+Frontend: Click "Return for Revision"
+        Frontend->>+API Gateway: POST /submissions/{id}/return
+        API Gateway->>+ESS: mark NEEDS_REVISION
+        ESS-->>-API Gateway: 200 OK
+        API Gateway-->>-Frontend: notify student
+        Frontend-->>Student: Prompt to upload replacement
+    end
 ```
 
 ## 4. Detailed Sub-Flows
@@ -57,8 +65,7 @@ flowchart TD
     IF1 -->|Paste / Upload| IF2[API Call /instant-feedback]
     IF2 --> IF3[AI Evaluation Pipeline]
     IF3 --> IF4[Return Suggestions]
-```
-*Instant Feedback* bypasses the formal Task entity but reuses the same AI evaluation stack with a generic rubric.
+```*Instant Feedback* bypasses the formal Task entity but reuses the same AI evaluation stack with a generic rubric.
 
 ### 4.3 Admin Oversight
 ```mermaid
