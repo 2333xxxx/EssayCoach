@@ -40,6 +40,7 @@
             eza
             tree
             git
+            lsof  # For checking processes on ports
             # Frontend Development (Vue.js 3 + Vite)
             pnpm
             nodejs_22
@@ -183,8 +184,8 @@ EOF
             # ---------- Local PostgreSQL Dev Cluster ----------
             # This block ensures a self-contained PostgreSQL instance is available
             # whenever you run `nix develop`. It stores data in .dev_pg/
-            # (git-ignored) and is only accessible on localhost via a dynamically
-            # assigned port.
+            # (git-ignored) and is only accessible on localhost on port 5432.
+            # Any existing process on port 5432 will be killed before starting.
             #
             # On shell exit, the database is stopped, and the data directory is
             # removed to ensure a clean start for the next session.
@@ -193,6 +194,17 @@ EOF
             export PGHOST="localhost"
 
             start_local_pg() {
+              # Force PostgreSQL to run on port 5432 only
+              export PGPORT=5432
+              
+              # Kill any existing process on port 5432
+              echo "[dev-pg] Checking for existing processes on port 5432..."
+              if lsof -ti:5432 >/dev/null 2>&1; then
+                echo "[dev-pg] Found process(es) on port 5432. Killing them..."
+                lsof -ti:5432 | xargs kill -9 2>/dev/null || true
+                sleep 2
+              fi
+              
               # Init DB if it doesn't exist
               if [ ! -d "$PGDATA" ]; then
                 echo "Initializing PostgreSQL data directory..."
@@ -201,29 +213,7 @@ EOF
 
               # Start if not already running
               if ! pg_ctl -D "$PGDATA" status > /dev/null; then
-                echo "[dev-pg] Starting PostgreSQL..."
-                
-                # Find an available port starting from 5433 (avoiding system default 5432)
-                # Use a more robust method that doesn't rely on netstat and reduces race conditions
-                export PGPORT=""
-                for port in $(seq 5433 5500); do
-                  # Try to bind to the port using a simple TCP test
-                  if ! (exec 3<>/dev/tcp/localhost/$port) 2>/dev/null; then
-                    export PGPORT=$port
-                    exec 3<&-
-                    exec 3>&-
-                    break
-                  else
-                    exec 3<&-
-                    exec 3>&-
-                  fi
-                done
-                
-                if [ -z "$PGPORT" ]; then
-                  echo "[dev-pg] ERROR: Could not find an available port in range 5433-5500"
-                  echo "[dev-pg] All ports in the range appear to be in use."
-                  return 1
-                fi
+                echo "[dev-pg] Starting PostgreSQL on port 5432..."
                 
                 if ! pg_ctl -D "$PGDATA" -o "-p $PGPORT" -l "$PGDATA/logfile" -w start; then
                   echo "[dev-pg] ERROR: Failed to start PostgreSQL. Check logs at '$PGDATA/logfile'."
