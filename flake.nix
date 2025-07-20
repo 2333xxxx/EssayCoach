@@ -281,6 +281,20 @@ EOF
 
             start_local_pg
 
+            # Python environment variables
+            export PYTHONPATH="$PWD:$PYTHONPATH"
+            export DJANGO_SETTINGS_MODULE="essaycoach.settings.development"
+            export DJANGO_SECRET_KEY="dev-secret-key-change-in-production"
+            export DATABASE_URL="postgresql://essayadmin:changeme@localhost:$PGPORT/essaycoach"
+            
+            # Django development server alias
+            alias runserver='python manage.py runserver'
+            alias migrate='python manage.py migrate'
+            alias makemigrations='python manage.py makemigrations'
+            alias createsuperuser='python manage.py createsuperuser'
+            alias shell='python manage.py shell'
+            alias dbshell='python manage.py dbshell'
+            
             # Project-specific aliases (PGPORT will be available when PostgreSQL starts)
             alias pg-connect='psql -U essayadmin -d essaycoach -h localhost -p $PGPORT'
             alias pg-logs='tail -f .dev_pg/logfile'
@@ -291,9 +305,11 @@ EOF
             
             echo "🚀 EssayCoach development environment ready!"
             echo "📦 Enhanced Bash with completions, colors, and shortcuts"
-            echo "💡 Useful aliases: ll, tree, cat (bat), pg-connect, pg-logs"
+            echo "💡 Useful aliases: ll, tree, cat (bat), pg-connect, pg-logs, runserver, migrate"
             echo "🔍 Use Ctrl+R for fuzzy history search, 'hf' for history finder"
             echo "📂 Current directory: $(pwd)"
+            echo "🐍 Python environment configured with Django"
+            echo "🔗 Database URL: postgresql://essayadmin:changeme@localhost:$PGPORT/essaycoach"
           '';
         };
       });
