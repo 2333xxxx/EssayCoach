@@ -12,7 +12,7 @@ This document formalises, in developer-friendly language, the **end-to-end busin
 | **Frontend (Vue SPA)** | Collects user input, renders dashboards, orchestrates client-side state. |
 | **API Gateway** | Single public entry-point; enforces authN/Z, throttling and routing. |
 | **Microservices** | UMS, ESS, AES, ARS… perform domain logic (see functional-module doc). |
-| **Message Queue** | Buffers long-running AI evaluation jobs, guarantees delivery. |
+| **Async Processing** | MVP: Django async views + PostgreSQL. Future: Redis + Celery for scalable queueing. |
 | **Datastores** | PostgreSQL (relational), OSS (files), OpenSearch (vectors). |
 
 ## 3. High-Level End-to-End Flow

@@ -11,7 +11,8 @@ EssayCoach is a future-oriented intelligent education platform designed to lever
     *   **Revision History Tracking:** View each draft and its corresponding AI feedback to clearly track progress.
 
 *   **AI Processing Core:**
-    *   **Intelligent Grading:** Automated, objective, and consistent scoring based on teacher-uploaded rubrics, utilizing RAG (Retrieval-Augmented Generation) technology.
+    *   **Intelligent Grading:** Automated, objective, and consistent scoring based on teacher-uploaded rubrics, utilizing Agentic Workflow
+    amd RAH (Retrieval-Augmented Generation).
     *   **Fact Verification:** Automatically identify key arguments and factual statements in the text, cross-referencing them against accredited sources via real-time online search.
     *   **Writing Enhancement Advice:** Provide specific, actionable suggestions for grammar, syntax, vocabulary enrichment, and logical flow.
 
@@ -27,13 +28,14 @@ Our technology selection adheres to "API-first," "front-end/back-end separation,
 
 *   **Frontend:**
     *   **Framework:** **Vue.js (Vue 3)** - As per your decision. Its component-based architecture, rich ecosystem (e.g., Vue Router, Pinia), and excellent performance are ideal for building complex Single Page Applications (SPAs).
-    *   **UI Library:** Element Plus or Vuetify - Provides high-quality, responsive UI components, accelerating development and ensuring a consistent cross-device experience.
+    *   **UI Library:** Using Naive UI components for modern, responsive design, and a consistent user experience.
     *   **Build Tool:** Vite - Offers an extremely fast development server and optimized bundling.
 
 *   **Backend:**
-    *   **Main Framework:** **Python (FastAPI)** - Python is the preferred language for AI/ML. FastAPI, with its high performance, async support, and automatic API documentation generation, is ideal for building AI-driven services.
+    *   **Main Framework:** **Python (Django)** - Python is the preferred language for AI/ML. Django provides a robust, batteries-included framework with excellent ORM, admin interface, and mature ecosystem. While FastAPI offers high performance for AI services, Django's comprehensive features and stability make it ideal for the core backend architecture. We may consider adding Flask API or Node.js services in the future if we need to handle more concurrent AI API calls.
     *   **Service Architecture:** **Microservices Architecture** - Decomposes core functionalities into independent services (e.g., user service, submission service, AI evaluation service), communicating via an API gateway. This architecture allows independent scaling and updating of each service; for example, upgrading the AI model only requires updating the AI evaluation service.
-    *   **Message Queue:** **RabbitMQ** or **Kafka** - Used for handling time-consuming asynchronous tasks (like AI evaluation). When a user submits an essay, the request is queued, and backend workers process it asynchronously, preventing API timeouts and significantly improving system responsiveness and throughput.
+    *   **MVP Processing:** Django async views + PostgreSQL for lightweight background processing during initial development.
+*   **Future Message Queue:** **Redis + Celery** - Used for handling time-consuming asynchronous tasks (like AI evaluation) in production deployment. When a user submits an essay, the request is queued, and backend workers process it asynchronously, preventing API timeouts and significantly improving system responsiveness and throughput.
 
 *   **Database Strategy:**
     Our database strategy involves a two-stage approach for optimal development and scalability:
@@ -47,6 +49,9 @@ Our technology selection adheres to "API-first," "front-end/back-end separation,
         *   **Relational Database:** **PostgreSQL** - Specifically, **ApsaraDB for RDS (PostgreSQL Edition)** on Alibaba Cloud. This managed service will handle performance, backups, and disaster recovery, allowing us to focus on application development.
         *   **Vector Database:** For the RAG core, we will use a dedicated Vector Database like Pinecone, ChromaDB, or Weaviate. On Alibaba Cloud, **ApsaraDB for OpenSearch (Vector Search Edition)** or **Elasticsearch (with vector search capabilities)** offer managed, high-performance vector search, crucial for efficient semantic similarity retrieval.
 
+*   **Development Environment & Package Management:**
+    *   **Nix** - A powerful package manager and build system that provides reproducible development environments across different machines and operating systems. Nix ensures consistent dependency management and eliminates "works on my machine" issues, making it ideal for team collaboration and CI/CD pipelines.
+
 *   **Deployment & Operations (DevOps) - Alibaba Cloud Specifics:**
     Given the website's availability in China, **Alibaba Cloud** will be our primary cloud provider, ensuring compliance, low latency, and optimized performance within the region.
 
@@ -55,7 +60,7 @@ Our technology selection adheres to "API-first," "front-end/back-end separation,
     *   **API Gateway:** We will utilize Alibaba Cloud's **API Gateway** for unified management, security, and throttling of our backend microservice interfaces.
     *   **File Storage:** **OSS** will be used for storing student-submitted essay files.
     *   **AI Model Deployment:** Leverage **PAI-EAS (Platform AI - Elastic Accelerated Service)** for deploying our AI models, which can automatically scale GPU/CPU resources based on request load. For external Large Language Models (LLMs), we will ensure compliant service nodes within mainland China, potentially leveraging Alibaba Cloud's partnerships with domestic LLM providers.
-    *   **Message Queues:** **Message Queue for RabbitMQ** or **Message Queue for Apache RocketMQ** - Alibaba Cloud's managed message queue services will handle asynchronous AI evaluation tasks, ensuring system decoupling and responsiveness.
+    *   **Message Queues:** **Redis + Celery** - Redis-based message queue with Celery workers for handling asynchronous AI evaluation tasks, ensuring system decoupling and responsiveness while leveraging existing Redis infrastructure.
 
 ## AI Evaluation System
 

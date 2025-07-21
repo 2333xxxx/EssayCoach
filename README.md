@@ -1,20 +1,29 @@
 # EssayCoach
 
-EssayCoach is a modern platform for essay coaching, leveraging a full-stack approach with a Vue 3 frontend built on the [Celeris Web](https://github.com/kirklin/celeris-web) framework and a Python FastAPI backend. This document provides guidance for developers collaborating on the project.
+EssayCoach is an AI-powered essay coaching platform that provides instant, multi-dimensional feedback to students while offering educators robust analytical tools. Built with Vue 3 frontend and Python Django backend, designed for scalability and educational research.
+
+## Quick Start
+**Zero-config development with Nix:**
+```bash
+nix develop  # Enter dev shell with all tools
+pnpm dev     # Start frontend (localhost:5173)
+poetry run python manage.py runserver  # Start backend (localhost:8000)
+```
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Vite, TypeScript, pnpm (built on [Celeris Web](https://github.com/kirklin/celeris-web) framework)
-- **State Management:** Pinia (already configured)
-- **Routing:** Vue Router (already configured)
-- **Testing:** Vitest (unit) & Cypress (E2E) pre-configured in the `main/` workspace
-- **Backend:** Python 3.11, FastAPI
-- **Database:** PostgreSQL (development), SQLite (optional for prototyping)
-- **Cache/Queue:** Redis
-- **Dev Environment:** Nix (flake-based, recommended), Poetry (Python), pnpm (Node)
-- **Testing:** Vitest (main), Pytest (backend)
+| Component | Technology |
+|-----------|------------|
+| **Frontend** | Vue 3 + TypeScript + Vite |
+| **UI Framework** | Naive UI + UnoCSS |
+| **State Management** | Pinia |
+| **Backend** | Python 3.11 + Django |
+| **Database** | PostgreSQL (dev/prod), SQLite (testing) |
+| **Async Processing** | Django async views (MVP) → Redis + Celery |
+| **Dev Environment** | Nix flakes + Poetry + pnpm |
+| **Testing** | Vitest (frontend) + Pytest (backend)
 
 ---
 
