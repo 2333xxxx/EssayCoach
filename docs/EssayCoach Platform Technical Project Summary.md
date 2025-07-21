@@ -29,8 +29,8 @@ We will implement a **distributed microservices architecture**, designed for hig
 *   **API Client:** Axios for HTTP requests.
 *   **Build & Deployment:** Production builds (static assets) will be deployed to **Alibaba Cloud OSS** buckets and served via **Alibaba Cloud CDN** for global low-latency access within China.
 
-### 3.2 Backend Microservices (Python / FastAPI)
-Each microservice will be an independent FastAPI application, leveraging Pydantic for data validation, SQLAlchemy (with Alembic for migrations) for ORM, and Python's async capabilities.
+### 3.2 Backend Microservices (Python / Django)
+The backend is built using **Django** with a modular app structure. While initially designed as microservices, the current implementation uses Django's built-in app structure for rapid development. Each Django app handles specific domain responsibilities, with the flexibility to extract into separate services later if needed. We use Django's ORM, admin interface, and REST framework for API development.
 *   **User Management Service (UMS):**
     *   **Responsibility:** User authentication (login, registration), authorization (RBAC: Student, Teacher, Admin roles), user profile management.
     *   **Authentication:** JWT-based tokens issued upon successful login. Tokens passed in `Authorization` header for subsequent requests. OAuth2/OpenID Connect for future SSO integration.
@@ -70,20 +70,20 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
                 2.  LLM generates context-aware corrections and improvement suggestions (e.g., rephrase passive voice, suggest stronger synonyms, correct grammatical errors).
                 3.  Output is an annotated version of the essay with integrated suggestions.
                 4.  Store advice in ApsaraDB for RDS.
-*   **Analytics & Reporting Service (ARS):**
+*   **Analytics & Reporting (analytics app):**
     *   **Responsibility:** Aggregates and processes essay evaluation data for teacher dashboards and research exports.
     *   **Data Source:** Reads directly from ApsaraDB for RDS (PostgreSQL).
     *   **Features:** Provides APIs for:
         *   Class/student performance metrics (average scores, common errors, progress trends).
         *   Individual revision history access.
         *   **Data Anonymization:** Implements robust PII removal and hashing/tokenization for anonymized dataset export.
-    *   **Deployment:** Standard FastAPI service on ACK.
+    *   **Deployment:** Standard Django service on ACK.
 
 ### 3.3 Databases & Storage
 *   **Relational Database:** **PostgreSQL (local container for development, Alibaba Cloud ApsaraDB for RDS in production)**.
     *   **Purpose:** Sole data store for structured application data: user accounts, essay metadata, evaluation results, rubric definitions, etc.
     *   **Benefits:** Consistency between environments, rich feature set (JSONB, full-text search), strong ecosystem support.
-    *   **Migration Strategy:** The same PostgreSQL schema is used from day one. Developers run a containerized PostgreSQL instance locally; staging/production environments point to managed RDS instances. Schema migrations are handled with **Alembic**.
+    *   **Migration Strategy:** The same PostgreSQL schema is used from day one. Developers run a containerized PostgreSQL instance locally; staging/production environments point to managed RDS instances. Schema migrations are handled with **Django's built-in migrations**.
 *   **Vector Database:** **Alibaba Cloud ApsaraDB for OpenSearch (Vector Search Edition)**.
     *   **Purpose:** High-performance storage and retrieval of vector embeddings for the RAG-based Grading Engine (rubric criteria embeddings, potentially essay segment embeddings for advanced semantic search).
     *   **Benefits:** Optimized for similarity search, scales horizontally.
@@ -97,9 +97,11 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
 *   **Benefits:** Centralized API management, security, and traffic control.
 
 ### 3.5 Asynchronous Messaging
-*   **Product:** **Alibaba Cloud Message Queue (for RabbitMQ or RocketMQ)**.
-*   **Responsibility:** Decoupling of essay submission from AI evaluation. When an essay is submitted, a message is published to a queue. AI Evaluation Service workers consume messages from this queue.
-*   **Benefits:** Improves responsiveness, handles back-pressure, enables horizontal scaling of AI workers, ensures message delivery guarantees (retries, dead-letter queues).
+*   **MVP Strategy:** Skip message queue entirely. Use Django's built-in async views + PostgreSQL for lightweight background processing. This allows rapid development while handling basic AI feedback generation.
+
+*   **Future Cloud Deployment:** **Redis + Celery** (leveraging existing Redis stack)
+    *   **Responsibility:** Decoupling of essay submission from AI evaluation, scalable AI processing queue, rate limiting for API calls, real-time notifications via WebSockets, and background report generation.
+    *   **Benefits:** Improves responsiveness, handles back-pressure, enables horizontal scaling of AI workers, ensures message delivery guarantees (retries, dead-letter queues), while utilizing existing Redis infrastructure.
 
 ## 4. Deployment & Infrastructure on Alibaba Cloud
 
@@ -122,8 +124,8 @@ Each microservice will be an independent FastAPI application, leveraging Pydanti
 *   **Code Quality:** Linting (Flake8, Black), type hinting (MyPy), unit/integration/E2E testing for all services.
 *   **Documentation:** API documentation (FastAPI auto-generates OpenAPI specs), architectural diagrams, READMEs for each service.
 *   **Observability:** Implement structured logging, expose Prometheus-compatible metrics endpoints, consider distributed tracing (e.g., OpenTelemetry integration).
-*   **Reproducible Dev Environment:** The entire toolchain (Python, Poetry/Pip, PostgreSQL CLI, Docker, etc.) is pinned and provisioned via **Nix flakes**. Team members simply run `nix develop` to enter an identical shell across macOS, Linux, and CI environments.
-*   **Database Migrations:** Utilize Alembic for managing database schema changes in a version-controlled manner, ensuring smooth upgrades.
+*   **Reproducible Dev Environment:** The entire toolchain (Python, Django, PostgreSQL CLI, Docker, etc.) is pinned and provisioned via **Nix flakes**. Team members simply run `nix develop` to enter an identical shell across macOS, Linux, and CI environments.
+*   **Database Migrations:** Utilize Django's built-in migrations for managing database schema changes in a version-controlled manner, ensuring smooth upgrades.
 
 ## 6. Scalability & Extensibility
 
@@ -132,6 +134,6 @@ The chosen architecture inherently supports these principles:
 *   **Loose Coupling:** Facilitates independent development, deployment, and upgrades of individual services. New features can be added as new microservices without affecting existing ones.
 *   **Asynchronous Processing:** Prevents bottlenecks from long-running tasks, maintaining high system throughput.
 *   **Managed Cloud Services:** Alibaba Cloud's RDS, OSS, OpenSearch, MQ, and PAI-EAS are fully managed, offering elastic scalability without manual intervention from our team.
-*   **ORM Layer (SQLAlchemy):** Decouples application logic from specific database implementations, facilitating potential future database changes if required, beyond the PostgreSQL/OpenSearch pair.
+*   **ORM Layer (Django ORM):** Decouples application logic from specific database implementations, facilitating potential future database changes if required, beyond the PostgreSQL/OpenSearch pair.
 
 This technical blueprint provides a solid foundation for developing the EssayCoach platform, balancing rapid initial development with robust, scalable, and maintainable cloud-native architecture.

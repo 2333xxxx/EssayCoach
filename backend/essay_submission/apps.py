@@ -37,5 +37,4 @@ class EssaySubmissionConfig(AppConfig):
     def ready(self):
         """Initialize essay submission app components when Django starts."""
         # Import signal handlers and processors
-        from . import signals
-        from . import processors
+        pass

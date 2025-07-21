@@ -56,7 +56,7 @@ The primary navigation links in the center of the top bar are dynamically displa
 |-----------|-------------|-------------|
 | Dashboard | `/dashboard` | The student's main landing page with task overviews. Accessed via the Logo. |
 | Tasks | `/tasks` | Navigates to the "My Tasks" page, listing all assigned essays. |
-| Instant Feedback | `/instant-feedback` | Opens the tool for on-demand writing practice and analysis. |
+| Essay Coach | `/essay-coach` | Opens the AI writing assistant for on-demand guidance and analysis. |
 
 #### Teacher Navigation
 | Link Text | Router Link | Description |
@@ -121,9 +121,8 @@ graph TD
 ```mermaid
 graph LR
     StudentHome["🏠 Dashboard"] --> TaskList["📋 My Tasks"]
-    TaskList --> InstantFB["⚡ Instant Feedback"]
-    InstantFB --> History["📚 Revision History"]
-    History --> Progress["📊 My Progress"]
+    TaskList --> EssayCoach["🤖 Essay Coach"]
+    EssayCoach --> Progress["📊 My Progress"]
     Progress --> Profile["👤 Profile"]
 ```
 

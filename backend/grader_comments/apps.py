@@ -38,5 +38,4 @@ class GraderCommentsConfig(AppConfig):
     def ready(self):
         """Initialize grader comments app components when Django starts."""
         # Import grading utilities and annotation handlers
-        from . import grading
-        from . import annotations
+        pass

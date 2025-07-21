@@ -1,20 +1,35 @@
 # EssayCoach
 
-EssayCoach is a modern platform for essay coaching, leveraging a full-stack approach with a Vue 3 frontend built on the [Celeris Web](https://github.com/kirklin/celeris-web) framework and a Python FastAPI backend. This document provides guidance for developers collaborating on the project.
+EssayCoach is an AI-powered essay coaching platform that provides instant, multi-dimensional feedback to students while offering educators robust analytical tools. Built with Vue 3 frontend and Python Django backend, designed for scalability and educational research.
+
+## Quick Start
+**Zero-config development with Nix:**
+```bash
+nix develop  # Enter dev shell with all tools
+# Automatically starts PostgreSQL and sets up environment
+
+# Option 1: Start both servers simultaneously
+dev          # Start backend + frontend via Overmind
+
+# Option 2: Start individually
+cd backend && python manage.py runserver   # Django backend (localhost:8000)
+cd frontend && pnpm dev                    # Vite frontend (localhost:4318)
+```
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** Vue 3, Vite, TypeScript, pnpm (built on [Celeris Web](https://github.com/kirklin/celeris-web) framework)
-- **State Management:** Pinia (already configured)
-- **Routing:** Vue Router (already configured)
-- **Testing:** Vitest (unit) & Cypress (E2E) pre-configured in the `main/` workspace
-- **Backend:** Python 3.11, FastAPI
-- **Database:** PostgreSQL (development), SQLite (optional for prototyping)
-- **Cache/Queue:** Redis
-- **Dev Environment:** Nix (flake-based, recommended), Poetry (Python), pnpm (Node)
-- **Testing:** Vitest (main), Pytest (backend)
+| Component | Technology |
+|-----------|------------|
+| **Frontend** | Vue 3 + TypeScript + Vite |
+| **UI Framework** | Naive UI + UnoCSS |
+| **State Management** | Pinia |
+| **Backend** | Python 3.12 + Django |
+| **Database** | PostgreSQL (dev/prod), SQLite (testing) |
+| **Async Processing** | Django async views (MVP) → Redis + Celery |
+| **Dev Environment** | Nix flakes + Poetry + pnpm |
+| **Testing** | Vitest (frontend) + Pytest (backend)|
 
 ---
 
@@ -38,7 +53,33 @@ cd EssayCoach
 ```sh
 nix develop
 ```
-This will provide all necessary tools for both main and backend development using the flake.nix configuration.
+This will provide all necessary tools for both frontend and backend development using the flake.nix configuration.
+
+#### What's Included
+- **PostgreSQL** - Auto-starts on port 5432 with schema and mock data
+- **Python Environment** - Django + FastAPI with all dependencies
+- **Frontend Tools** - Node.js 22, pnpm, Vite
+- **Development Tools** - Git aliases, enhanced shell, Overmind process manager
+- **Database** - `essaycoach` database with `essayadmin` user (password: changeme)
+
+#### Available Commands
+```bash
+# Process management (via Overmind)
+dev           # Start both backend + frontend servers
+dev-logs      # View combined logs
+dev-stop      # Stop all services
+dev-restart   # Restart all services
+
+# Database shortcuts
+pg-connect    # Connect to PostgreSQL CLI
+pg-logs       # View PostgreSQL logs
+pg-status     # Check PostgreSQL status
+
+# Django shortcuts
+runserver     # Start Django development server
+migrate       # Run Django migrations
+shell         # Django shell
+```
 
 ---
 
@@ -46,52 +87,65 @@ This will provide all necessary tools for both main and backend development usin
 
 ### Setup
 ```sh
-cd main
+cd frontend
 pnpm install
 ```
 
 ### Development Server
 ```sh
-cd main
-pnpm run dev
+cd frontend
+pnpm dev
 ```
-The app will be available at [http://localhost:5173](http://localhost:5173) by default.
+The app will be available at [http://localhost:4318](http://localhost:4318) by default.
 
 ### Build for Production
 ```sh
-cd main
-pnpm run build
+cd frontend
+pnpm build
 ```
 
 ---
 
-## Backend (Python + FastAPI)
+## Backend (Python + Django)
 
 ### Setup
 ```sh
 cd backend
-poetry install
+# Dependencies are pre-installed via nix develop
 ```
 
 ### Development Server
 ```sh
-poetry run uvicorn main:app --reload
+cd backend
+python manage.py runserver
 ```
 The API will be available at [http://localhost:8000](http://localhost:8000) by default.
+
+### Database Setup
+```sh
+python manage.py migrate  # Run migrations (already done in nix develop)
+python manage.py createsuperuser  # Create admin user
+```
 
 ---
 
 ## Database
-- **PostgreSQL** is the default for development. Ensure it is running and accessible at the URL in your environment variables (`DATABASE_URL`).
+- **PostgreSQL** is automatically configured in the nix environment
+  - Starts on port 5432 with schema and mock data pre-loaded
+  - Database: `essaycoach` with user `essayadmin` (password: `changeme`)
+  - Environment variable: `DATABASE_URL=postgresql://essayadmin:changeme@localhost:5432/essaycoach`
 - **SQLite** can be used for quick prototyping (see `.gitignore` for ignored files).
 
 ---
 
 ## Environment Variables
-Set these in your shell or in a `.env` file (see `.gitignore` for ignored env files):
-- `DATABASE_URL` (e.g., `postgresql://localhost:5432/essaycoach_dev`)
-- `REDIS_URL` (e.g., `redis://localhost:6379`)
-- `NODE_ENV` (e.g., `development`)
+All environment variables are automatically configured in the nix environment:
+- `DATABASE_URL` - PostgreSQL connection string (auto-configured)
+- `DJANGO_SETTINGS_MODULE` - Points to Django settings
+- `PYTHONPATH` - Includes project root
+- `PGPORT` - PostgreSQL port (5432)
+
+For Docker deployment, see `docker-compose.yml` for container-specific environment variables.
 
 ---
 
@@ -138,9 +192,24 @@ When creating branches for this project, please follow these naming conventions:
 
 ## Additional Notes
 
-- Use the Nix shell for a consistent, reproducible environment.
-- For Docker-based development, see `docker-compose.yml` (if present).
-- For questions, see the `/docs` folder or contact the maintainers.
+- **Use the Nix shell** for a consistent, reproducible environment
+- **Development scripts** are located in `scripts/dev-env/` for easy customization
+- **Process management** via Overmind (see `Procfile` for service definitions)
+- **For Docker-based development**, see `docker-compose.yml` (separate from nix workflow)
+- **For questions**, see the `/docs` folder or contact the maintainers
+
+### Development Environment Structure
+```
+scripts/dev-env/
+├── bash-config.sh      # Shell configuration
+├── prompt-setup.sh     # Git-aware prompt
+├── aliases.sh          # Development shortcuts  
+├── postgres-setup.sh   # Local database setup
+├── env-vars.sh         # Environment configuration
+├── welcome-message.sh  # Startup banner
+├── start-backend.sh    # Django server startup
+└── start-frontend.sh   # Vite server startup
+```
 
 ### Current Front-End Dependencies (managed by `pnpm`)
 

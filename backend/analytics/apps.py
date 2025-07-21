@@ -37,5 +37,4 @@ class AnalyticsConfig(AppConfig):
     def ready(self):
         """Initialize analytics app components when Django starts."""
         # Import signal handlers and periodic tasks
-        from . import signals
-        from . import tasks
+        pass

@@ -116,9 +116,9 @@ Once the teacher publishes a task, students can begin their learning journey:
         *   **Sub-score Breakdown & Detailed Comments:** For each grading standard (e.g., "Clarity of Argument," "Structure & Logic"), the AI will provide specific scores and textual comments explaining why that score was given, helping students understand reasons for deductions or bonuses.
         *   **Fact-Check Results:** The AI will highlight all factual statements in the essay that were checked, indicating "verified," "disputed," or "no supporting source found," along with links to authoritative sources, guiding students to verify information.
         *   **Writing Improvement Suggestions:**
-            *   **Grammar & Spelling Corrections:** Precisely point out and suggest corrections for grammatical errors, spelling mistakes, and punctuation issues.
-            *   **Vocabulary Optimization:** Identify repetitive or inappropriate word usage, providing more precise, richer synonyms or expressions.
-            *   **Sentence Structure & Style Guidance:** Offer optimization suggestions for long sentences, short sentences, passive voice, citation format, etc., to improve the essay's flow and readability.
+            *   **Grammar & Spelling:** Precisely point out and suggest corrections for grammatical errors, spelling mistakes, and punctuation issues.
+            *   **Vocabulary:** Identify repetitive or inappropriate word usage, providing more precise, richer synonyms or expressions.
+            *   **Structure & Style:** Offer optimization suggestions for passive voice, complex syntax sentence, passive voice, and in-text citation format, etc., to improve the essay's flow and readability.
             *   These features are also available separately as per user's request
     
 5.  **Revise and Iterate:**

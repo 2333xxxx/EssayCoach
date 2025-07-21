@@ -37,5 +37,4 @@ class FeedbackReportConfig(AppConfig):
     def ready(self):
         """Initialize feedback report app components when Django starts."""
         # Import report generators and template loaders
-        from . import generators
-        from . import templates
+        pass

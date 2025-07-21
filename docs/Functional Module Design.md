@@ -58,7 +58,7 @@ graph LR
 | **AES** | Python (FastAPI Workers) | Ingest queue messages, run grading/fact-check/advice, publish `<EvaluationCompleted>` | OSS, OpenSearch, LLM provider, PostgreSQL |
 | **ARS** | Python (FastAPI) | Aggregated metrics, anonymised exports, dashboards APIs | PostgreSQL |
 | **API Gateway** | N/A (Managed) | Routing, authZ, rate-limiting, caching | JWT, OAuth2 provider |
-| **MQ** | Alibaba MQ (RabbitMQ/RocketMQ) | Asynchronous decoupling | — |
+| **MQ** | Redis + Celery (future) / Django async (MVP) | Asynchronous processing | — |
 | **OSS** | Alibaba OSS | Essay file storage | — |
 | **PostgreSQL** | ApsaraDB RDS | Relational data | — |
 | **OpenSearch** | ApsaraDB OpenSearch | Vector similarity search | — |

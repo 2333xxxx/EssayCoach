@@ -39,5 +39,4 @@ class NotificationConfig(AppConfig):
     def ready(self):
         """Initialize notification app components when Django starts."""
         # Import notification handlers and schedulers
-        from . import handlers
-        from . import schedulers
+        pass
