@@ -5,7 +5,63 @@
 This plan is at a very early stage and is subject to future change. It is provided to share initial ideas and direction with peer developers. Feedback and suggestions are welcome as the project evolves.
 ---
 
-## Frontend Tasks
+## 🎯 MVP Checklist (Next 2-4 weeks)
+
+### Database & Backend Foundation
+- [ ] **PostgreSQL Setup**
+  - Initialize database schema from `/docs/DB-V2.md`
+  - Create Django models for users, essays, feedback
+  - Set up initial migrations
+
+- [ ] **Authentication System**
+  - Django user registration/login endpoints
+  - JWT token implementation
+  - Basic user profile management
+
+### Frontend Core
+- [ ] **Login/Registration Pages**
+  - Vue 3 login form with validation
+  - Registration flow with email verification
+  - Password reset functionality
+
+- [ ] **Essay Submission Flow**
+  - File upload interface (PDF, DOCX, TXT)
+  - Basic essay metadata form
+  - Submission status tracking
+
+---
+
+## 🚀 Phase 2 Features (Post-MVP)
+
+### AI Integration
+- [ ] **OpenAI Integration**
+  - Basic essay feedback generation
+  - Grading rubric processing
+  - Simple feedback display
+
+### Enhanced UX
+- [ ] **Real-time Notifications**
+  - WebSocket setup for feedback ready alerts
+  - Email notifications for completion
+
+---
+
+## 🔧 Infrastructure Tasks
+
+### Development Environment
+- [ ] **Docker Setup**
+  - Complete docker-compose.yml for all services
+  - Development container configuration
+
+### Testing & Quality
+- [ ] **Test Coverage**
+  - Backend API tests (Pytest)
+  - Frontend component tests (Vitest)
+  - End-to-end testing setup
+
+---
+
+## Frontend Tasks (Original Detailed List)
 
 ### Core Features
 
