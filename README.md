@@ -25,11 +25,11 @@ cd frontend && pnpm dev                    # Vite frontend (localhost:4318)
 | **Frontend** | Vue 3 + TypeScript + Vite |
 | **UI Framework** | Naive UI + UnoCSS |
 | **State Management** | Pinia |
-| **Backend** | Python 3.11 + Django |
+| **Backend** | Python 3.12 + Django |
 | **Database** | PostgreSQL (dev/prod), SQLite (testing) |
 | **Async Processing** | Django async views (MVP) → Redis + Celery |
 | **Dev Environment** | Nix flakes + Poetry + pnpm |
-| **Testing** | Vitest (frontend) + Pytest (backend)
+| **Testing** | Vitest (frontend) + Pytest (backend)|
 
 ---
 
