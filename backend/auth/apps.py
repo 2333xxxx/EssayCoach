@@ -39,12 +39,9 @@ class AuthConfig(AppConfig):
     
     default_auto_field = "django.db.models.BigAutoField"
     name = "auth"
+    label = "essay_auth"  # Unique label to avoid conflict with django.contrib.auth
     verbose_name = "Authentication and Authorization"
     
     def ready(self):
         """Initialize the app when Django starts."""
-        # Import signal handlers when the app is ready
-        try:
-            import auth.signals  # noqa F401
-        except ImportError:
-            pass
+        pass

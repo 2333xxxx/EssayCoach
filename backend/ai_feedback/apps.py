@@ -36,4 +36,4 @@ class AiFeedbackConfig(AppConfig):
     def ready(self):
         """Initialize AI feedback app components when Django starts."""
         # Import signal handlers
-        from . import signals
+        pass
