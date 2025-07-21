@@ -67,6 +67,7 @@ export default defineConfig(({ mode }) => {
       // target: ["chrome89", "edge89", "firefox89", "safari15"],
       // vite默认值为500kb，可以自主修改
       chunkSizeWarningLimit: 500,
+      base: '/EssayCoach/',
     },
     server: {
       host: true,
