@@ -29,10 +29,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Create mkdocs.yml
-        run: |
-          echo "site_name: EssayCoach Docs" > mkdocs.yml
-          echo "theme: readthedocs" >> mkdocs.yml
+      
 
       - name: Build documentation
         run: |
