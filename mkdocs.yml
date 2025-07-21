@@ -1,0 +1,129 @@
+site_name: EssayCoach Developer Documentation
+site_description: Technical documentation and design specifications for EssayCoach platform
+site_url: https://eric-gt.github.io/EssayCoach
+copyright: 2024 EssayCoach Team
+
+# Repository information
+repo_name: EssayCoach
+repo_url: https://github.com/eric-gt/EssayCoach
+edit_uri: edit/main/docs/
+
+# Theme configuration optimized for developers
+theme:
+  name: material
+  palette:
+    # Dark mode preferred for developers
+    - scheme: slate
+      primary: blue grey
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    # Light mode option
+    - scheme: default
+      primary: blue grey
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  
+  font:
+    text: Roboto
+    code: Roboto Mono
+  
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.path
+    - navigation.indexes
+    - toc.integrate
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+
+# Navigation structure for developers
+nav:
+  - Technical Overview: index.md
+  - Platform Overview:
+    - Project Summary: EssayCoach Platform Summary.md
+    - Technical Summary: EssayCoach Platform Technical Project Summary.md
+    - Core Features: EssayCoach Platform Core Features and User Experience Flow.md
+    - Business Process: Business Process Workflow.md
+  - Architecture & Design:
+    - System Architecture: architecture/system-architecture.md
+    - Database Design: architecture/database-design.md
+    - API Specification: architecture/api-specification.md
+    - Nix Environment: architecture/nix-environment.md
+    - Functional Modules: Functional Module Design.md
+    - Navigation Design: Navigation Bars Design.md
+  - Database Schema:
+    - Schema Overview: database/schema-overview.md
+    - ERD Diagram: database/erd-diagram.md
+    - Migration Strategy: database/migrations.md
+    - Database V2 Details: DB/DB-V2.md
+  - Backend Deep Dive:
+    - Django Models: backend/django-models.md
+    - Serializers & Views: backend/serializers-views.md
+    - Async Processing: backend/async-processing.md
+    - Testing Strategies: backend/testing.md
+  - Frontend Architecture:
+    - Component Structure: frontend/component-structure.md
+    - State Management: frontend/state-management.md
+    - API Integration: frontend/api-integration.md
+    - Testing Patterns: frontend/testing.md
+  - Development Guide:
+    - Environment Setup: development/environment-setup.md
+    - Debugging Guide: development/debugging.md
+    - Contributing: development/contributing.md
+  - API Reference:
+    - REST Endpoints: api/rest-endpoints.md
+    - WebSocket Events: api/websocket-events.md
+    - Error Handling: api/error-handling.md
+
+# Markdown extensions for technical content
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.snippets:
+      base_path: docs/snippets
+  - pymdownx.emoji
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - abbr
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.inlinehilite
+  - pymdownx.critic
+  - pymdownx.mark
+  - pymdownx.tilde
+
+# Plugins for enhanced developer experience
+plugins:
+  - search
+  - mermaid2:
+      version: 10.6.1
+  - git-revision-date-localized:
+      type: datetime
+  - minify:
+      minify_html: true
