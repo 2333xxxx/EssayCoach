@@ -4,17 +4,29 @@ EssayCoach is built as a modern microservices-ready web application with a clear
 
 ## 🏗️ High-Level Architecture
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│     Client      │────│     API         │────│   Database      │
-│   (Vue 3 SPA)   │    │   (Django)      │    │  (PostgreSQL)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│     Vite        │    │   Async Tasks   │    │   Redis         │
-│   Dev Server    │    │   (Celery)      │    │   (Cache)       │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+```mermaid
+graph LR
+    subgraph "Frontend Layer"
+        Client[Vue 3 SPA Client]
+        Vite[Vite Dev Server]
+    end
+    
+    subgraph "Backend Layer"
+        API[Django REST API]
+        Async[Celery Async Tasks]
+    end
+    
+    subgraph "Data Layer"
+        DB[(PostgreSQL Database)]
+        Cache[(Redis Cache)]
+    end
+    
+    Client -- REST API --> API
+    API -- Read/Write --> DB
+    API -- Queue Tasks --> Async
+    API -- Cache Data --> Cache
+    Async -- Process --> DB
+    Vite -- Hot Reload --> Client
 ```
 
 ## 🔧 Technology Stack
@@ -45,81 +57,237 @@ EssayCoach is built as a modern microservices-ready web application with a clear
 ## 📊 Data Flow Architecture
 
 ### Essay Processing Pipeline
-```
-Student Uploads Essay
-    ↓
-Frontend Validation
-    ↓
-Backend API Endpoint
-    ↓
-Database Storage
-    ↓
-Async AI Analysis
-    ↓
-Feedback Generation
-    ↓
-Real-time Updates
-    ↓
-Student Dashboard
+```mermaid
+flowchart LR
+    Start([Student Uploads Essay]) --> Validation[Frontend Validation]
+    Validation --> API[Backend API Endpoint]
+    API --> Storage[Database Storage]
+    Storage --> Async[Async AI Analysis]
+    Async --> Generation[Feedback Generation]
+    Generation --> Updates[Real-time Updates]
+    Updates --> Dashboard[Student Dashboard]
+    Dashboard --> Review([Student Reviews Feedback])
 ```
 
 ### AI Integration Architecture
-- **Service**: External AI service integration
-- **Queue**: Celery for async processing
-- **Cache**: Redis for session storage
-- **WebSocket**: Real-time progress updates
+```mermaid
+graph LR
+    subgraph "AI Processing Flow"
+        ExtAI[External AI Service]
+        Queue[Celery Queue]
+        Cache[Redis Cache]
+        WS[WebSocket Server]
+        Worker[Celery Worker]
+    end
+    subgraph "Data Storage"
+        DB[(PostgreSQL)]
+        FileStore[File Storage]
+    end
+    Queue -- Tasks --> Worker
+    Worker -- Process --> ExtAI
+    ExtAI -- Results --> Worker
+    Worker -- Store --> DB
+    Worker -- Cache --> Cache
+    WS -- Real-time Updates --> Cache
+    DB -- Read Cached --> Cache
+    Cache -- Serve --> WS
+```
 
 ## 🚀 Scalability Considerations
 
 ### Horizontal Scaling
-- **Frontend**: CDN deployment of static assets
-- **Backend**: Load balancer with multiple Django instances
-- **Database**: Read replicas for query optimization
-- **Cache**: Redis cluster for session management
+```mermaid
+graph LR
+    subgraph "Frontend Layer"
+        CDN[CDN / CloudFront]
+        Static[Static Assets]
+    end
+    subgraph "Backend Layer"
+        LB[Load Balancer]
+        API1[API Instance 1]
+        API2[API Instance 2]
+        APIN[API Instance N]
+    end
+    subgraph "Data Layer"
+        Master[(PostgreSQL Master)]
+        Replica1[(Read Replica 1)]
+        Replica2[(Read Replica 2)]
+        Redis[(Redis Cluster)]
+    end
+    CDN -- Serve --> Static
+    LB -- Distribute --> API1
+    LB -- Distribute --> API2
+    LB -- Distribute --> APIN
+    API1 -- Write --> Master
+    API1 -- Read --> Replica1
+    API2 -- Read --> Replica2
+    API1 -- Cache --> Redis
+    API2 -- Cache --> Redis
+```
 
 ### Performance Optimizations
-- **Database**: Indexes on frequently queried fields
-- **API**: Pagination for large result sets
-- **Frontend**: Code splitting and lazy loading
-- **Caching**: Redis for expensive computations
+```mermaid
+graph TD
+    subgraph "Optimization Strategies"
+        DBOpt[Database Optimization]
+        APIOpt[API Optimization]
+        FrontOpt[Frontend Optimization]
+        CacheOpt[Caching Strategy]
+    end
+    subgraph "Implementation"
+        Indexes[Database Indexes]
+        Pagination[API Pagination]
+        CodeSplit[Code Splitting]
+        RedisCache[Redis Caching]
+    end
+    DBOpt --> Indexes
+    APIOpt --> Pagination
+    FrontOpt --> CodeSplit
+    CacheOpt --> RedisCache
+```
 
 ## 🔐 Security Architecture
 
 ### Authentication Flow
-- **JWT**: Stateless authentication tokens
-- **Refresh**: Automatic token refresh
-- **Permissions**: Role-based access control
-- **CSRF**: Django CSRF protection
+```mermaid
+sequenceDiagram
+    participant User as Student/Teacher
+    participant Frontend as Vue.js SPA
+    participant API as Django REST API
+    participant Auth as JWT Auth
+    participant DB as PostgreSQL
+    
+    User->>Frontend: Login Credentials
+    Frontend->>API: POST /auth/token/
+    API->>Auth: Validate Credentials
+    Auth->>DB: Verify User
+    DB-->>Auth: User Data
+    Auth-->>API: JWT Token + Refresh
+    API-->>Frontend: Access + Refresh Tokens
+    Frontend->>Frontend: Store Securely
+    
+    loop Every 15 minutes
+        Frontend->>API: POST /auth/refresh/
+        API->>Auth: Validate Refresh
+        Auth-->>Frontend: New Access Token
+    end
+```
 
 ### Data Protection
-- **Encryption**: HTTPS/TLS for all communications
-- **Storage**: Encrypted database at rest
-- **Validation**: Input validation on all endpoints
-- **Rate Limiting**: API throttling per user
+```mermaid
+graph TB
+    subgraph "Security Layers"
+        HTTPS[HTTPS/TLS]
+        Encryption[Encryption at Rest]
+        Validation[Input Validation]
+        RateLimit[Rate Limiting]
+    end
+    subgraph "Implementation"
+        SSL[SSL Certificates]
+        PGCrypto[PostgreSQL Crypto]
+        DRFValidation[Django DRF Validation]
+        Throttle[API Throttling]
+    end
+    HTTPS --> SSL
+    Encryption --> PGCrypto
+    Validation --> DRFValidation
+    RateLimit --> Throttle
+```
 
 ## 🧪 Testing Strategy
 
-### Unit Testing
-- **Backend**: Pytest with 90%+ coverage
-- **Frontend**: Vitest for component testing
-- **Integration**: API endpoint testing
-- **E2E**: Cypress for user workflows
+### Testing Architecture
+```mermaid
+graph TD
+    subgraph "Testing Pyramid"
+        Unit[Unit Tests]
+        Integration[Integration Tests]
+        E2E[E2E Tests]
+    end
+    subgraph "Backend"
+        Pytest[Pytest 90%+ Coverage]
+        APITest[API Endpoint Tests]
+        LoadTest[Load Tests]
+        Locust[Locust Load Testing]
+    end
+    subgraph "Frontend"
+        Vitest[Vitest Components]
+        Cypress[Cypress E2E]
+        PerfTest[Performance Tests]
+        Lighthouse[Lighthouse Performance]
+    end
+    Unit --> Pytest
+    Unit --> Vitest
+    Integration --> APITest
+    E2E --> Cypress
+    LoadTest --> Locust
+    PerfTest --> Lighthouse
+```
 
 ### Performance Testing
-- **Load**: Locust for load testing
-- **Stress**: Database connection limits
-- **Monitoring**: Application Performance Monitoring (APM)
+```mermaid
+graph LR
+    subgraph "Testing Tools"
+        Locust[Locust Load Testing]
+        K6[K6 Stress Testing]
+        APM[Application Performance Monitoring]
+    end
+    subgraph "Monitoring"
+        Prometheus[Prometheus Metrics]
+        Grafana[Grafana Dashboards]
+        Alerts[Automated Alerts]
+    end
+    Locust --> APM
+    K6 --> APM
+    Prometheus --> Grafana
+    Grafana --> Alerts
+```
 
 ## 📈 Monitoring & Observability
 
-### Application Monitoring
-- **Logging**: Structured logging with correlation IDs
-- **Metrics**: Prometheus + Grafana dashboards
-- **Tracing**: Distributed tracing with OpenTelemetry
-- **Alerts**: Automated alerting for errors and performance
+### Monitoring Architecture
+```mermaid
+graph TB
+    subgraph "Observability Stack"
+        Logging[Structured Logging]
+        Metrics[Application Metrics]
+        Tracing[Distributed Tracing]
+    end
+    subgraph "Tools"
+        ELK[ELK Stack]
+        Prometheus[Prometheus]
+        Jaeger[Jaeger Tracing]
+    end
+    subgraph "Visualization"
+        Grafana[Grafana Dashboards]
+        Kibana[Kibana Logs]
+        Alerts[Alert Manager]
+    end
+    Logging --> ELK
+    Metrics --> Prometheus
+    Tracing --> Jaeger
+    Prometheus --> Grafana
+    ELK --> Kibana
+    Grafana --> Alerts
+```
 
 ### Infrastructure Monitoring
-- **Health Checks**: Kubernetes probes
-- **Auto-scaling**: Based on CPU/memory usage
-- **Backup**: Automated database backups
-- **Disaster Recovery**: Multi-region deployment strategy
+```mermaid
+graph LR
+    subgraph "Infrastructure"
+        K8s[Kubernetes]
+        Health[Health Checks]
+        Backup[Automated Backups]
+        Recovery[Disaster Recovery]
+    end
+    subgraph "Auto-Scaling"
+        HPA[Horizontal Pod Autoscaler]
+        VPA[Vertical Pod Autoscaler]
+        Cluster[Cluster Autoscaler]
+        AutoScale[Auto-Scaling Actions]
+    end
+    K8s --> Health
+    Health --> HPA
+    HPA --> AutoScale
+    Backup --> Recovery
+```

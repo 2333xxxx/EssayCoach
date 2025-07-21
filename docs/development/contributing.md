@@ -92,4 +92,53 @@ What should happen
 
 ## Development Notes
 
+### Branch Workflow & Review Process
+
+#### Documentation Branch Workflow
+1. **All documentation changes** must first be merged to the `docs` branch
+2. **Documentation includes**:
+   - API documentation updates
+   - Architecture diagram changes
+   - README updates
+   - Any `.md` file modifications
+3. **After docs branch review**, changes are then merged from `docs` to `main`
+
+#### Code Review Process
+1. **Pull Request Requirements**:
+   - Must include at least 1 approving review from code owner
+   - All CI checks must pass (tests, linting, type checking)
+   - Documentation must be updated for any API changes
+   - Breaking changes require migration guide
+
+2. **Review Checklist** for reviewers:
+   - [ ] Code follows project style guidelines
+   - [ ] Tests are included and passing
+   - [ ] Documentation is updated
+   - [ ] No security vulnerabilities introduced
+   - [ ] Performance considerations addressed
+   - [ ] Accessibility standards met (frontend changes)
+
+3. **Review Timeline**:
+   - **Initial review**: Within 24 hours on weekdays
+   - **Follow-up reviews**: Within 12 hours after updates
+   - **Complex changes**: May require 2+ reviewers
+
+#### Branch Protection Rules
+- **main branch**: Requires 2 approving reviews + all CI checks
+- **docs branch**: Requires 1 approving review + documentation checks
+- **feature branches**: Must be up-to-date with target branch before merge
+
+#### Merge Strategy
+- **Squash and merge** for feature branches (clean history)
+- **Merge commit** for docs → main merges (preserve history)
+- **Rebase** only for personal feature branches (never on shared branches)
+
+#### Release Process
+1. Create release branch from `main`
+2. Update version numbers and changelog
+3. Test in staging environment
+4. Create PR from release branch to `main`
+5. After approval, merge and tag release
+6. Deploy to production
+
 [This section will be expanded with actual contribution guidelines]

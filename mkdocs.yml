@@ -11,25 +11,26 @@ edit_uri: edit/main/docs/
 # Theme configuration optimized for developers
 theme:
   name: material
+  
   palette:
-    # Dark mode preferred for developers
+    # Dark mode with enhanced colors
     - scheme: slate
-      primary: blue grey
-      accent: teal
+      primary: blue
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-    # Light mode option
+    # Light mode with enhanced colors
     - scheme: default
-      primary: blue grey
-      accent: teal
+      primary: blue
+      accent: cyan
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
   
   font:
-    text: Roboto
-    code: Roboto Mono
+    text: Inter
+    code: JetBrains Mono
   
   features:
     - navigation.tabs
@@ -46,6 +47,19 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.annotate
+  
+  extra:
+    social:
+      - icon: fontawesome/brands/github
+        link: https://github.com/eric-gt/EssayCoach
+    
+  # Custom styling
+  extra_css:
+    - stylesheets/extra.css
+  
+  # Custom JavaScript
+  extra_javascript:
+    - javascripts/extra.js
 
 # Navigation structure for developers
 nav:

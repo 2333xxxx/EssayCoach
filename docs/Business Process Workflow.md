@@ -65,7 +65,9 @@ flowchart TD
     IF1 -->|Paste / Upload| IF2[API Call /instant-feedback]
     IF2 --> IF3[AI Evaluation Pipeline]
     IF3 --> IF4[Return Suggestions]
-```*Instant Feedback* bypasses the formal Task entity but reuses the same AI evaluation stack with a generic rubric.
+```
+
+*Instant Feedback* bypasses the formal Task entity but reuses the same AI evaluation stack with a generic rubric.
 
 ### 4.3 Admin Oversight
 ```mermaid

@@ -205,119 +205,262 @@ Authorization: Bearer {access_token}
 
 *(Admin/Educator users only)*
 
-## 🔄 Real-time Updates
+## 🔄 API Architecture Flow
 
-### WebSocket Events
-
-#### Connection
-```javascript
-const ws = new WebSocket('ws://localhost:8000/ws/essays/');
-ws.onopen = function(event) {
-  ws.send(JSON.stringify({
-    type: 'subscribe',
-    essay_id: 123
-  }));
-};
+### Request Lifecycle
+```mermaid
+sequenceDiagram
+    participant Client as Vue.js Client
+    participant API as Django REST API
+    participant JWT as JWT Authentication
+    participant Models as Django Models
+    participant DB as PostgreSQL
+    participant Cache as Redis Cache
+    participant Async as Celery Worker
+    participant AI as External AI Service
+    
+    Client->>API: HTTP Request + JWT Token
+    API->>JWT: Validate Token
+    JWT->>Cache: Check Cache
+    alt Cache Hit
+        Cache-->>API: Cached Response
+    else Cache Miss
+        API->>Models: ORM Query
+        Models->>DB: SQL Query
+        DB-->>Models: Data
+        Models->>Async: Trigger Async Task (if needed)
+        Async->>AI: Send to AI Service
+        AI-->>Async: AI Results
+        Async->>DB: Store Results
+        Models-->>API: Processed Data
+        API->>Cache: Cache Response
+    end
+    API-->>Client: JSON Response
 ```
 
-#### Essay Processing Updates
-```json
-{
-  "type": "processing_update",
-  "essay_id": 123,
-  "status": "processing",
-  "progress": 45,
-  "message": "Analyzing essay structure..."
-}
+### Authentication Flow
+```mermaid
+flowchart TD
+    subgraph "Authentication Process"
+        Login[User Login] --> Validate[Validate Credentials]
+        Validate --> Generate[Generate JWT Token]
+        Generate --> Store[Store Token Securely]
+        Store --> Access[Access Protected Resources]
+    end
+    subgraph "Token Management"
+        Access --> Check{Token Valid?}
+        Check -- Yes --> Proceed[Proceed with Request]
+        Check -- No --> Refresh[Refresh Token]
+        Refresh --> NewToken[New Access Token]
+    end
 ```
 
-#### New Feedback Available
-```json
-{
-  "type": "feedback_ready",
-  "essay_id": 123,
-  "feedback_count": 3,
-  "overall_score": 85.5
-}
+### Essay Submission Flow
+```mermaid
+sequenceDiagram
+    participant Student
+    participant Frontend
+    participant API as API Gateway
+    participant EssaySvc as Essay Service
+    participant Storage as File Storage
+    participant Queue as Message Queue
+    participant Worker as Async Worker
+    participant AI as AI Service
+    participant Notifier as Notification Service
+    
+    Student->>Frontend: Upload Essay
+    Frontend->>Frontend: Client-side Validation
+    Frontend->>API: POST /api/essays/
+    API->>EssaySvc: Create Essay Submission
+    EssaySvc->>Storage: Upload File
+    EssaySvc->>Storage: Store Metadata
+    EssaySvc->>Queue: Publish EssaySubmitted Event
+    EssaySvc-->>Frontend: 202 Accepted
+    Frontend-->>Student: Show Processing
+    Queue->>Worker: Consume EssaySubmitted
+    Worker->>AI: Send Essay for Analysis
+    AI->>Worker: Return AI Analysis
+    Worker->>Storage: Store AI Results
+    Worker->>Queue: Publish AnalysisCompleted
+    Queue->>Notifier: Notify Completion
+    Notifier->>Frontend: WebSocket Update
+    Frontend-->>Student: Display Results
 ```
 
-## 🎯 Error Handling
-
-### Standard Error Response
-```json
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid essay data provided",
-    "details": {
-      "title": ["This field is required"],
-      "content": ["Essay must be at least 100 words"]
-    }
-  }
-}
+### Feedback System Flow
+```mermaid
+flowchart TD
+    subgraph "Feedback Generation"
+        Essay[Essay Submitted] --> Validate[Validate Essay]
+        Validate --> Process[Process with AI]
+        Process --> Generate[Generate Feedback]
+        Generate --> Store[Store Feedback]
+        Store --> Notify[Notify User]
+    end
+    subgraph "Feedback Types"
+        Store --> Grammar[Grammar Feedback]
+        Store --> Structure[Structure Feedback]
+        Store --> Content[Content Feedback]
+        Store --> Overall[Overall Score]
+    end
 ```
 
-### Common Error Codes
-- `AUTHENTICATION_FAILED`: Invalid credentials
-- `PERMISSION_DENIED`: Insufficient permissions
-- `NOT_FOUND`: Resource doesn't exist
-- `VALIDATION_ERROR`: Invalid input data
-- `RATE_LIMIT_EXCEEDED`: Too many requests
-- `SERVER_ERROR`: Internal server error
-
-## 📱 Rate Limiting
-
-### Limits
-- **Authentication**: 5 requests per minute
-- **Essay Creation**: 10 essays per hour
-- **API Requests**: 100 requests per minute
-
-### Headers
-```http
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1640995200
+### Real-time Updates Flow
+```mermaid
+graph LR
+    subgraph "WebSocket Architecture"
+        Client[Vue.js Client]
+        WS1[WebSocket Connection 1]
+        WS2[WebSocket Connection 2]
+        Redis[Redis PubSub]
+        Backend[Django Channels]
+    end
+    subgraph "Event Sources"
+        AI[AI Processing]
+        Teacher[Teacher Actions]
+        System[System Events]
+    end
+    AI -- Event --> Backend
+    Teacher -- Event --> Backend
+    System -- Event --> Backend
+    Backend -- Publish --> Redis
+    Redis -- Broadcast --> WS1
+    Redis -- Broadcast --> WS2
+    WS1 -- Update --> Client
 ```
 
-## 🔍 Pagination
+## 🎯 Error Handling Flow
 
-### Response Format
-All list endpoints support pagination:
-
-```json
-{
-  "count": 100,
-  "next": "http://localhost:8000/api/essays/?page=2",
-  "previous": null,
-  "results": [...]
-}
+### Error Resolution Flow
+```mermaid
+flowchart TD
+    subgraph "Error Handling Process"
+        Error[API Error] --> Identify{Identify Error Type}
+        Identify -- Validation --> ValidationError[Validation Error]
+        Identify -- Auth --> AuthError[Authentication Error]
+        Identify -- Server --> ServerError[Server Error]
+        Identify -- Rate --> RateError[Rate Limit Error]
+    end
+    subgraph "Error Response"
+        ValidationError --> FieldErrors[Field-level Errors]
+        AuthError --> LoginRedirect[Redirect to Login]
+        ServerError --> RetryLogic[Retry with Backoff]
+        RateError --> WaitRetry[Wait and Retry]
+    end
 ```
 
-### Parameters
-- `page`: Page number (default: 1)
-- `page_size`: Items per page (default: 20, max: 100)
-
-## 🧪 Testing
-
-### API Testing with cURL
-```bash
-# Get authentication token
-curl -X POST http://localhost:8000/api/auth/token/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"test@example.com","password":"testpass"}'
-
-# List essays
-curl -X GET http://localhost:8000/api/essays/ \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+### Rate Limiting Flow
+```mermaid
+sequenceDiagram
+    participant Client
+    participant RateLimit as Rate Limiter
+    participant API as API Gateway
+    participant Cache as Redis Cache
+    
+    Client->>RateLimit: API Request
+    RateLimit->>Cache: Check Request Count
+    alt Within Limit
+        Cache-->>RateLimit: Allow Request
+        RateLimit->>API: Process Request
+        API-->>RateLimit: Increment Counter
+        RateLimit-->>Client: Success Response
+    else Limit Exceeded
+        Cache-->>RateLimit: Rate Limit Exceeded
+        RateLimit-->>Client: 429 Too Many Requests
+    end
 ```
 
-### OpenAPI Schema
-Access the complete OpenAPI 3.0 schema at:
-```
-http://localhost:8000/api/schema/
+## 📊 Pagination & Filtering Flow
+
+### Pagination Architecture
+```mermaid
+graph TD
+    subgraph "Pagination Process"
+        Request[Paginated Request] --> Parse{Parse Parameters}
+        Parse --> Validate[Validate Page/Size]
+        Validate --> Query[Database Query]
+        Query --> Count[Count Total Records]
+        Count --> Slice[Slice Results]
+        Slice --> Serialize[Serialize Response]
+        Serialize --> Response[Paginated Response]
+    end
+    subgraph "Response Structure"
+        Serialize --> Results[Results Array]
+        Serialize --> Meta[Metadata]
+        Meta --> Count[Total Count]
+        Meta --> Next[Next URL]
+        Meta --> Prev[Previous URL]
+    end
 ```
 
-Interactive API documentation is available at:
+### Filtering Flow
+```mermaid
+flowchart TD
+    subgraph "Filtering Process"
+        Filters[Query Parameters] --> ParseFilters[Parse Filters]
+        ParseFilters --> BuildQuery[Build SQL Query]
+        BuildQuery --> ApplyFilters[Apply WHERE clauses]
+        ApplyFilters --> Execute[Execute Query]
+        Execute --> Return[Return Filtered Results]
+    end
+    subgraph "Filter Types"
+        Equals[Exact Match]
+        Contains[Partial Match]
+        Range[Date/Number Ranges]
+        Sort[Sorting Options]
+        Search[Full-text Search]
+    end
 ```
-http://localhost:8000/api/docs/
+
+## 🔍 API Documentation Flow
+
+### OpenAPI Generation Flow
+```mermaid
+graph LR
+    subgraph "Documentation Generation"
+        Code[Django Views] --> Serializer[Django REST Serializers]
+        Serializer --> Schema[OpenAPI Schema]
+        Schema --> Swagger[Swagger UI]
+        Schema --> Redoc[ReDoc]
+    end
+    subgraph "Interactive Documentation"
+        Swagger --> TryAPI[Try API Endpoints]
+        Redoc --> ReadDocs[Read Documentation]
+        TryAPI --> Test[Live Testing]
+    end
+```
+
+### Testing Workflow
+```mermaid
+flowchart TD
+    subgraph "API Testing Process"
+        Spec[OpenAPI Spec] --> Generate[Generate Test Cases]
+        Generate --> Run[Run Tests]
+        Run --> Validate[Validate Responses]
+        Validate --> Report[Test Report]
+    end
+    subgraph "Testing Tools"
+        Spec --> Postman[Postman Collection]
+        Spec --> Newman[Newman CLI]
+        Spec --> PyTest[PyTest Integration]
+    end
+```
+
+## 🚀 Deployment Flow
+
+### CI/CD Pipeline
+```mermaid
+graph TD
+    subgraph "Development Workflow"
+        Code[Code Changes] --> Test[Run Tests]
+        Test -- Pass --> Build[Build Docker Images]
+        Build --> Deploy[Deploy to Staging]
+        Deploy --> Validate[Validate APIs]
+        Validate -- Success --> Production[Deploy to Production]
+    end
+    subgraph "Deployment Environments"
+        Staging[Staging Environment]
+        Production[Production Environment]
+        Monitoring[Post-deployment Monitoring]
+    end
 ```
