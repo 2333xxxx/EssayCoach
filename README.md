@@ -1,8 +1,5 @@
 # EssayCoach
 
-<<<<<<< HEAD
-EssayCoach is an innovative platform designed to revolutionize the way students write essays. By leveraging cutting-edge AI technology, EssayCoach provides personalized feedback and guidance to help students improve their writing skills, structure their arguments, and enhance their critical thinking abilities. Our mission is to make high-quality writing support accessible to all students, empowering them to achieve academic excellence.
-=======
 EssayCoach is an AI-powered essay coaching platform that provides instant, multi-dimensional feedback to students while offering educators robust analytical tools. Built with Vue 3 frontend and Python Django backend, designed for scalability and educational research.
 
 ## Quick Start
@@ -18,7 +15,6 @@ dev          # Start backend + frontend via Overmind
 cd backend && python manage.py runserver   # Django backend (localhost:8000)
 cd frontend && pnpm dev                    # Vite frontend (localhost:4318)
 ```
->>>>>>> 7c7187ba9b6bb8e57270d2391d91b0eb54e1b906
 
 ## Features
 
@@ -30,12 +26,6 @@ cd frontend && pnpm dev                    # Vite frontend (localhost:4318)
 
 ## Tech Stack
 
-<<<<<<< HEAD
-- **Frontend:** Vue.js, Vite, UnoCSS
-- **Backend:** Django, Python
-- **Database:** PostgreSQL
-- **Containerization:** Docker
-=======
 | Component | Technology |
 |-----------|------------|
 | **Frontend** | Vue 3 + TypeScript + Vite |
@@ -48,7 +38,6 @@ cd frontend && pnpm dev                    # Vite frontend (localhost:4318)
 | **Testing** | Vitest (frontend) + Pytest (backend)|
 
 ---
->>>>>>> 7c7187ba9b6bb8e57270d2391d91b0eb54e1b906
 
 ## Getting Started
 
@@ -81,8 +70,6 @@ EssayCoach/
 ├── docs/            # Project documentation
 └── docker-compose.yml # Docker Compose file
 ```
-<<<<<<< HEAD
-=======
 This will provide all necessary tools for both frontend and backend development using the flake.nix configuration.
 
 #### What's Included
@@ -211,7 +198,6 @@ When creating branches for this project, please follow these naming conventions:
 ---
 
 
->>>>>>> 7c7187ba9b6bb8e57270d2391d91b0eb54e1b906
 
 ## Contributing
 
@@ -219,13 +205,6 @@ Contributions are what make the open-source community such an amazing place to l
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-<<<<<<< HEAD
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-=======
 - **Use the Nix shell** for a consistent, reproducible environment
 - **Development scripts** are located in `scripts/dev-env/` for easy customization
 - **Process management** via Overmind (see `Procfile` for service definitions)
@@ -244,7 +223,6 @@ scripts/dev-env/
 ├── start-backend.sh    # Django server startup
 └── start-frontend.sh   # Vite server startup
 ```
->>>>>>> 7c7187ba9b6bb8e57270d2391d91b0eb54e1b906
 
 ## License
 
