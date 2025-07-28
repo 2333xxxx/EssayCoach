@@ -4,7 +4,7 @@ cd backend
 # Use the current shell's environment directly
 export PYTHONPATH="$PWD/..:$PYTHONPATH"
 export DJANGO_SETTINGS_MODULE="essay_coach.settings"
-export DATABASE_URL="postgresql://essayadmin:changeme@localhost:5432/essaycoach"
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/essaycoach"
 export DJANGO_SECRET_KEY="dev-secret-key-change-in-production"
 
 # PostgreSQL configuration
@@ -12,8 +12,8 @@ export PGDATA="$PWD/../.dev_pg"
 export PGHOST="localhost"
 export PGPORT=5432
 export POSTGRES_DB="essaycoach"
-export POSTGRES_USER="essayadmin"
-export POSTGRES_PASSWORD="changeme"
+export POSTGRES_USER="postgres"
+export POSTGRES_PASSWORD="postgres"
 export POSTGRES_HOST="localhost"
 export POSTGRES_PORT="5432"
 
@@ -48,14 +48,11 @@ start_postgres() {
     
     echo "[dev-pg] PostgreSQL started successfully"
     
-    # Create database and user if they don't exist
-    psql -U postgres -p "$PGPORT" -h "$PGHOST" -tc "SELECT 1 FROM pg_roles WHERE rolname = '$POSTGRES_USER'" | grep -q 1 || \
-        psql -U postgres -p "$PGPORT" -h "$PGHOST" -c "CREATE ROLE $POSTGRES_USER LOGIN PASSWORD '$POSTGRES_PASSWORD';" >/dev/null
-    
+    # Create database if it doesn't exist (using postgres superuser)
     psql -U postgres -p "$PGPORT" -h "$PGHOST" -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB'" | grep -q 1 || \
-        psql -U postgres -p "$PGPORT" -h "$PGHOST" -c "CREATE DATABASE $POSTGRES_DB OWNER $POSTGRES_USER;" >/dev/null
+        psql -U postgres -p "$PGPORT" -h "$PGHOST" -c "CREATE DATABASE $POSTGRES_DB OWNER postgres;" >/dev/null
     
-    echo "[dev-pg] Database '$POSTGRES_DB' with user '$POSTGRES_USER' is ready"
+    echo "[dev-pg] Database '$POSTGRES_DB' with postgres superuser is ready"
     
     # Load schema if database is empty
     if ! psql -U "$POSTGRES_USER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -tc "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1;" 2>/dev/null | grep -q 1; then
