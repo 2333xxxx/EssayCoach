@@ -31,11 +31,14 @@ start_local_pg() {
     initdb -D "$PGDATA" --auth=trust --no-locale --encoding=UTF8 -U postgres >/dev/null
   fi
 
+  # Ensure socket directory exists
+  mkdir -p "$PWD/.pg_socket"
+  
   # Start if not already running
   if ! pg_ctl -D "$PGDATA" status > /dev/null; then
     echo "[dev-pg] Starting PostgreSQL on port 5432..."
     
-    if ! pg_ctl -D "$PGDATA" -o "-p $PGPORT" -l "$PGDATA/logfile" -w start; then
+    if ! pg_ctl -D "$PGDATA" -o "-k $PWD/.pg_socket -p $PGPORT" -l "$PGDATA/logfile" -w start; then
       echo "[dev-pg] ERROR: Failed to start PostgreSQL. Check logs at '$PGDATA/logfile'."
       return 1
     fi
