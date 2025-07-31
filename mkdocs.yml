@@ -1,11 +1,11 @@
 site_name: EssayCoach Developer Documentation
 site_description: Technical documentation and design specifications for EssayCoach platform
-site_url: https://eric-gt.github.io/EssayCoach
+site_url: https://eric123y.github.io/EssayCoach
 copyright: 2024 EssayCoach Team
 
 # Repository information
 repo_name: EssayCoach
-repo_url: https://github.com/eric-gt/EssayCoach
+repo_url: https://github.com/Eryc123Y/EssayCoach
 edit_uri: edit/main/docs/
 
 # Theme configuration optimized for developers
