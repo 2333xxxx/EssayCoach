@@ -13,8 +13,9 @@ The current database schema is visualized below:
 ## 🏗️ Core Entities
 
 ### Users and Authentication
-- **Users**: Django's built-in User model extended with profile information
-- **Roles**: Student, Educator, Admin with different permissions
+- **Users**: Custom `public."user"` table aligned with Django auth fields (password/last_login/is_active/is_staff/is_superuser/date_joined) and business fields (email, first/last name, status)
+- **Groups/Permissions**: Django-native groups and permissions via `core_user_groups` and `core_user_user_permissions`
+- **Roles**: Student, Lecturer, Admin represented by groups (legacy `user_role` retained for compatibility)
 - **Authentication**: JWT tokens with refresh mechanism
 
 ### Essay Management
@@ -34,35 +35,32 @@ The current database schema is visualized below:
 
 ## 🔄 Relationships and Constraints
 
-### Primary Relationships
+### Primary Relationships (selected)
 ```sql
--- User to Essays (One-to-Many)
-Users.id → Essays.user_id
+-- User (custom) to Submissions (One-to-Many)
+public."user".user_id → submission.user_id_user
 
--- Essay to Feedback (One-to-Many)
-Essays.id → Feedback.essay_id
+-- User to Groups (Many-to-Many)
+public."user".user_id ↔ core_user_groups(user_id, group_id) ↔ auth_group.id
 
--- Feedback to FeedbackTypes (Many-to-One)
-Feedback.type_id → FeedbackTypes.id
-
--- User to Analytics (One-to-Many)
-Users.id → Analytics.user_id
+-- User to Permissions (Many-to-Many)
+public."user".user_id ↔ core_user_user_permissions(user_id, permission_id) ↔ auth_permission.id
 ```
 
 ### Foreign Key Constraints
-- All relationships enforce referential integrity
-- CASCADE deletes for user-related data
-- RESTRICT deletes for shared resources
+- Referential integrity enforced for core entities
+- CASCADE deletes on join tables (user/group, user/permission)
 - Indexes on foreign keys for performance
 
 ## 📈 Performance Optimizations
 
 ### Indexes
 ```sql
-CREATE INDEX idx_essays_user_id ON essays(user_id);
-CREATE INDEX idx_feedback_essay_id ON feedback(essay_id);
-CREATE INDEX idx_analytics_user_created ON analytics(user_id, created_at);
-CREATE INDEX idx_users_email ON users(email);
+-- Join tables
+CREATE INDEX core_user_groups_user_idx ON core_user_groups(user_id);
+CREATE INDEX core_user_groups_group_idx ON core_user_groups(group_id);
+CREATE INDEX core_user_user_permissions_user_idx ON core_user_user_permissions(user_id);
+CREATE INDEX core_user_user_permissions_perm_idx ON core_user_user_permissions(permission_id);
 ```
 
 ### Partitioning Strategy

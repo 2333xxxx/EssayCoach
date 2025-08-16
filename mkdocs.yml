@@ -80,9 +80,11 @@ nav:
     - Schema Overview: database/schema-overview.md
     - ERD Diagram: database/erd-diagram.md
     - Migration Strategy: database/migrations.md
-    - Database V2 Details: DB/DB-V2.md
+    - User Alignment: database/user-auth-alignment.md
+    - Database V3 Details: DB/DB-V3.md
   - Backend Deep Dive:
     - Django Models: backend/django-models.md
+    - Auth & Permissions: backend/auth-permissions.md
     - Serializers & Views: backend/serializers-views.md
     - Async Processing: backend/async-processing.md
     - Testing Strategies: backend/testing.md

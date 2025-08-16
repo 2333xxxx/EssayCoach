@@ -240,6 +240,31 @@ class Migration(migrations.Migration):
     ]
 ```
 
+## User Model Alignment (Aug 2025)
+
+To align our existing `public."user"` table with Django’s auth expectations and avoid admin/login errors:
+
+- Added Django-compatible columns to `user`: `is_superuser`, `is_staff`, `is_active`, `last_login`, `date_joined` (cold-start via `docker/db/init/00_init.sql`).
+- Created M2M join tables for groups and permissions: `core_user_groups`, `core_user_user_permissions`.
+- Widened `user_email` to `varchar(254)` for `EmailField` compatibility.
+- Bootstrapped default groups and a custom permission `core.view_student_stats`.
+
+Migrations introduced:
+
+- `core/0001_initial.py` – Register `core.User` in migration state (managed=False), enabling `AUTH_USER_MODEL` resolution.
+- `core/0002_default_groups.py` – Create default groups and map users by `user_role` into `core_user_groups`.
+- `core/0003_add_fk_to_m2m.py` – Add FKs from join tables to `auth_group` and `auth_permission`.
+- `core/0004_setup_permissions.py` – Create custom permission and assign group permissions:
+  - admin: add/change/delete/view user + view_student_stats
+  - lecturer: view user + view_student_stats
+  - student: no model-level user perms (own-data enforced in views)
+- `core/0005_widen_user_email_len.py` – Safe ALTER to widen `user_email` to 254 if needed.
+
+Startup safeguards:
+
+- `scripts/dev-env/start-backend.sh` ensures admin user, groups, and permissions exist and are properly assigned (idempotent), providing a robust local dev experience.
+
+
 ## 📈 Performance Considerations
 
 ### Large Table Migrations
