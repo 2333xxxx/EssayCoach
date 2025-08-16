@@ -43,7 +43,7 @@ CREATE TABLE public."user" (
 	user_id integer NOT NULL,
 	user_fname varchar(20),
 	user_lname varchar(20),
-	user_email varchar(50),
+	user_email varchar(254),
 	user_role varchar(10),
 	user_status varchar(15),
 	user_credential varchar(255),
