@@ -19,6 +19,8 @@ class Class(models.Model):
         managed = False
         db_table = 'class'
         db_table_comment = 'A table for class entity'
+        verbose_name = 'class'
+        verbose_name_plural = 'classes'
 
 
 class Enrollment(models.Model):
