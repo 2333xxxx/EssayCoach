@@ -103,7 +103,47 @@ if python -c "import django; print(f'Django {django.get_version()} found')" 2>/d
     # Run database migrations
     echo "Running Django migrations..."
     python manage.py migrate --noinput
-    
+
+    # create a superuser if it doesn't exist
+    echo "Ensuring default admin superuser exists..."
+    python - <<'PY'
+import os
+from django.db import connection
+from django.contrib.auth.hashers import make_password
+
+# Target credentials
+email_candidates = ['admin', 'admin@example.com']
+password = 'admin'
+hashed = make_password(password)
+
+with connection.cursor() as cur:
+    # Try to update existing admin-like user by email
+    updated = False
+    for email in email_candidates:
+        cur.execute(
+            'UPDATE "user"\n'
+            'SET user_credential = %s, user_role = %s, user_status = %s\n'
+            'WHERE user_email = %s\n'
+            'RETURNING user_id',
+            [hashed, 'admin', 'active', email]
+        )
+        if cur.rowcount:
+            updated = True
+            break
+
+    if not updated:
+        # Insert a new admin user with the requested username/email 'admin'
+        cur.execute('SELECT COALESCE(MAX(user_id)+1, 1) FROM "user"')
+        next_id = cur.fetchone()[0]
+        cur.execute(
+            'INSERT INTO "user" (user_id, user_fname, user_lname, user_email, user_role, user_status, user_credential)\n'
+            'VALUES (%s, %s, %s, %s, %s, %s, %s)',
+            [next_id, 'Admin', 'User', 'admin', 'admin', 'active', hashed]
+        )
+
+print('Admin user ensured (email: "admin" or "admin@example.com")')
+PY
+
     # Start the development server
     echo "Starting Django development server..."
     python manage.py runserver
