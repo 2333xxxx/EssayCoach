@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import (
-    User, Unit, Class, Enrollment, TeachingAssignment,
+    User, Unit, Class, Enrollment, TeachingAssn,
     MarkingRubric, RubricItem, RubricLevelDesc,
     Task, Submission, Feedback, FeedbackItem
 )
@@ -13,7 +13,7 @@ admin.site.register(User, BaseUserAdmin)
 admin.site.register(Unit)
 admin.site.register(Class)
 admin.site.register(Enrollment)
-admin.site.register(TeachingAssignment)
+admin.site.register(TeachingAssn)
 admin.site.register(MarkingRubric)
 admin.site.register(RubricItem)
 admin.site.register(RubricLevelDesc)
