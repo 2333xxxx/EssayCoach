@@ -45,7 +45,7 @@ start_postgres() {
     fi
     
     # Start PostgreSQL with custom socket directory
-    if ! pg_ctl -D "$PGDATA" -o "-k $PWD/../.pg_socket -p $PGPORT" -l "$PGDATA/logfile" -w start; then
+    if ! pg_ctl -D "$PGDATA" -o "-k \"$PWD/../.pg_socket\" -p $PGPORT" -l "$PGDATA/logfile" -w start; then
         echo "[dev-pg] ERROR: Failed to start PostgreSQL"
         cat "$PGDATA/logfile" 2>/dev/null || echo "No log file found"
         return 1
