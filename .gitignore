@@ -208,7 +208,6 @@ cypress/screenshots/
 .docker/
 docker/db/data/
 .dev_pg/
-.pg_socket/
 
 # Nitro (Backend Framework)
 .nitro/
