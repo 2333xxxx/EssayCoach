@@ -1,118 +1,110 @@
 {
-  "name": "showy-naive-starter",
+  "name": "essay-coach-admin",
   "type": "module",
-  "version": "0.1.0",
-  "private": true,
-  "packageManager": "pnpm@9.12.2",
-  "description": "An admin dashboard UI template based on Vue 3, Vite, Naive UI, and UnoCSS. 基于 Vue 3、Vite、Naive UI 和 UnoCSS 的管理后台UI模板。",
-  "author": "lileyzhao@gmail.com",
+  "version": "1.3.15",
+  "description": "A fresh and elegant admin template for Essay Coach, based on Vue3、Vite7、TypeScript、NaiveUI and UnoCSS. 一个基于Vue3、Vite7、TypeScript、NaiveUI and UnoCSS的Essay Coach清新优雅的中后台模版。",
+  "author": {
+    "name": "Essay Coach Team",
+    "email": "team@essaycoach.com",
+    "url": "https://github.com/essaycoach"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/lileyzhao/showy-naive-starter",
+  "homepage": "https://github.com/essaycoach/essay-coach-admin",
   "repository": {
-    "url": "https://github.com/lileyzhao/showy-naive-starter.git"
+    "url": "https://github.com/essaycoach/essay-coach-admin.git"
   },
   "bugs": {
-    "url": "https://github.com/lileyzhao/showy-naive-starter/issues"
+    "url": "https://github.com/essaycoach/essay-coach-admin/issues"
   },
+  "keywords": [
+    "Vue3 admin ",
+    "vue-admin-template",
+    "Vite7",
+    "TypeScript",
+    "naive-ui",
+    "naive-ui-admin",
+    "ant-design-vue v4",
+    "UnoCSS"
+  ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.19.0",
+    "pnpm": ">=10.5.0"
   },
-  "website": "https://naive-template.git.showyou.dev",
   "scripts": {
-    "dev": "concurrently \"pnpm run dev:frontend\" \"pnpm run dev:backend\"",
-    "dev:frontend": "pnpm vite",
-    "dev:backend": "cd ../backend && python manage.py runserver",
-    "build": "pnpm vite build",
-    "build:docker": "vite build --mode docker",
-    "preview": "pnpm run build && vite preview",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "lint:view": "npx eslint-flat-config-viewer",
-    "preinstall": "npx only-allow pnpm",
-    "prepare": "husky"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
+    "build": "vite build --mode prod",
+    "build:test": "vite build --mode test",
+    "cleanup": "sa cleanup",
+    "commit": "sa git-commit",
+    "commit:zh": "sa git-commit -l=zh-cn",
+    "dev": "vite --mode test",
+    "dev:prod": "vite --mode prod",
+    "gen-route": "sa gen-route",
+    "lint": "eslint . --fix",
+    "prepare": "simple-git-hooks",
+    "preview": "vite preview",
+    "release": "sa release",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck",
+    "update-pkg": "sa update-pkg"
   },
   "dependencies": {
-    "@unocss/reset": "^0.63.6",
-    "@vueuse/core": "^11.1.0",
-    "pinia": "^2.2.4",
-    "vue": "^3.5.12",
-    "vue-i18n": "^10.0.4",
-    "vue-router": "^4.4.5"
+    "@better-scroll/core": "2.5.1",
+    "@iconify/vue": "5.0.0",
+    "@sa/axios": "workspace:*",
+    "@sa/color": "workspace:*",
+    "@sa/hooks": "workspace:*",
+    "@sa/materials": "workspace:*",
+    "@sa/utils": "workspace:*",
+    "@vueuse/core": "13.5.0",
+    "clipboard": "2.0.11",
+    "dayjs": "1.11.13",
+    "defu": "6.1.4",
+    "echarts": "5.6.0",
+    "json5": "2.2.3",
+    "naive-ui": "2.42.0",
+    "nprogress": "0.2.0",
+    "pinia": "3.0.3",
+    "tailwind-merge": "3.3.1",
+    "vue": "3.5.17",
+    "vue-draggable-plus": "0.6.0",
+    "vue-i18n": "11.1.9",
+    "vue-router": "4.5.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.8.0",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@iconify-json/carbon": "^1.2.3",
-    "@iconify-json/line-md": "^1.2.2",
-    "@iconify-json/lucide": "^1.2.10",
-    "@intlify/unplugin-vue-i18n": "^5.2.0",
-    "@types/node": "^22.7.9",
-    "@unocss/eslint-config": "^0.63.6",
-    "@unocss/preset-rem-to-px": "^0.63.6",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "concurrently": "^9.2.0",
-    "eslint": "^9.13.0",
-    "eslint-plugin-format": "^0.1.2",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
-    "naive-ui": "^2.40.1",
-    "picocolors": "^1.1.1",
-    "sass": "^1.80.3",
-    "typescript": "^5.6.3",
-    "unocss": "^0.63.6",
-    "unplugin-auto-import": "^0.18.3",
-    "unplugin-vue-components": "^0.27.4",
-    "vite": "^5.4.10",
-    "vite-plugin-progress": "^0.0.7",
-    "vite-plugin-vue-devtools": "^7.5.3",
-    "vue-tsc": "^2.1.6"
+    "@elegant-router/vue": "0.3.8",
+    "@iconify/json": "2.2.357",
+    "@sa/scripts": "workspace:*",
+    "@sa/uno-preset": "workspace:*",
+    "@soybeanjs/eslint-config": "1.7.1",
+    "@types/node": "24.0.13",
+    "@types/nprogress": "0.2.3",
+    "@unocss/eslint-config": "66.3.3",
+    "@unocss/preset-icons": "66.3.3",
+    "@unocss/preset-uno": "66.3.3",
+    "@unocss/transformer-directives": "66.3.3",
+    "@unocss/transformer-variant-group": "66.3.3",
+    "@unocss/vite": "66.3.3",
+    "@vitejs/plugin-vue": "6.0.0",
+    "@vitejs/plugin-vue-jsx": "5.0.1",
+    "consola": "3.4.2",
+    "eslint": "9.31.0",
+    "eslint-plugin-vue": "10.3.0",
+    "kolorist": "1.8.0",
+    "sass": "1.89.2",
+    "simple-git-hooks": "2.13.0",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3",
+    "unplugin-icons": "22.1.0",
+    "unplugin-vue-components": "28.8.0",
+    "vite": "7.0.4",
+    "vite-plugin-progress": "0.0.7",
+    "vite-plugin-svg-icons": "2.0.1",
+    "vite-plugin-vue-devtools": "7.7.7",
+    "vue-eslint-parser": "10.2.0",
+    "vue-tsc": "3.0.1"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ],
-    "*.vue": [
-      "eslint --fix"
-    ]
+  "simple-git-hooks": {
+    "commit-msg": "pnpm sa git-commit-verify",
+    "pre-commit": "pnpm typecheck && pnpm lint && git diff --exit-code"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "type-enum": [
-        2,
-        "always",
-        [
-          "feat",
-          "fix",
-          "docs",
-          "style",
-          "refactor",
-          "perf",
-          "test",
-          "build",
-          "ci",
-          "chore",
-          "revert"
-        ]
-      ],
-      "subject-full-stop": [
-        2,
-        "never",
-        "/[.!?,;。！？，；]$/"
-      ],
-      "header-max-length": [
-        2,
-        "always",
-        80
-      ]
-    }
-  }
+  "website": "https://admin.essaycoach.com"
 }

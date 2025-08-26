@@ -1,24 +1,65 @@
 <script setup lang="ts">
-import { darkTheme } from 'naive-ui'
+import { computed } from 'vue';
+import { NConfigProvider, darkTheme } from 'naive-ui';
+import type { WatermarkProps } from 'naive-ui';
+import { useAppStore } from './store/modules/app';
+import { useThemeStore } from './store/modules/theme';
+import { useAuthStore } from './store/modules/auth';
+import { naiveDateLocales, naiveLocales } from './locales/naive';
 
-const app = useAppStore()
-const theme = computed(() => (isDark.value ? darkTheme : null))
-const naiveLocale = computed(() => getNaiveLocale(app.localeSetting.locale))
+defineOptions({
+  name: 'App'
+});
+
+const appStore = useAppStore();
+const themeStore = useThemeStore();
+const authStore = useAuthStore();
+
+const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
+
+const naiveLocale = computed(() => {
+  return naiveLocales[appStore.locale];
+});
+
+const naiveDateLocale = computed(() => {
+  return naiveDateLocales[appStore.locale];
+});
+
+const watermarkProps = computed<WatermarkProps>(() => {
+  const content =
+    themeStore.watermark.enableUserName && authStore.userInfo.userName
+      ? authStore.userInfo.userName
+      : themeStore.watermark.text;
+
+  return {
+    content,
+    cross: true,
+    fullscreen: true,
+    fontSize: 16,
+    lineHeight: 16,
+    width: 384,
+    height: 384,
+    xOffset: 12,
+    yOffset: 60,
+    rotate: -15,
+    zIndex: 9999
+  };
+});
 </script>
 
 <template>
   <NConfigProvider
-    :theme="theme" :locale="naiveLocale.locale" :date-locale="naiveLocale.dateLocale"
-    :theme-overrides="app.themeOverride" inline-theme-disabled
+    :theme="naiveDarkTheme"
+    :theme-overrides="themeStore.naiveTheme"
+    :locale="naiveLocale"
+    :date-locale="naiveDateLocale"
+    class="h-full"
   >
-    <NModalProvider>
-      <NDialogProvider>
-        <NNotificationProvider>
-          <NMessageProvider>
-            <RouterView />
-          </NMessageProvider>
-        </NNotificationProvider>
-      </NDialogProvider>
-    </NModalProvider>
+    <AppProvider>
+      <RouterView class="bg-layout" />
+      <NWatermark v-if="themeStore.watermark.visible" v-bind="watermarkProps" />
+    </AppProvider>
   </NConfigProvider>
 </template>
+
+<style scoped></style>

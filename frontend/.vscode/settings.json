@@ -1,92 +1,31 @@
 {
-  // 控制相关文件嵌套展示
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.expand": false,
-  "explorer.fileNesting.patterns": {
-    "*.ts": "$(capture).test.ts, $(capture).test.tsx",
-    "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
-    "*.env": "$(capture).env.*",
-    "package.json": "package-lock.json,pnpm-*.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,README*,CHANGELOG*",
-    ".editorconfig": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,.stylelintrc.*,eslint.config.*,commitlint.config.*",
-    "tsconfig.json": "tsconfig.*.json",
-    "dockerfile": ".dockerignore,netlify.*"
-  },
-  "cSpell.words": [
-    "antfu",
-    "astro",
-    "attributify",
-    "breakline",
-    "Clickoutside",
-    "commitlint",
-    "dicom",
-    "DSEG",
-    "iconify",
-    "intlify",
-    "jigglypuff",
-    "Liley",
-    "lucide",
-    "Makabaka",
-    "nocheck",
-    "nocoll",
-    "nums",
-    "picocolors",
-    "pinia",
-    "predev",
-    "preinstall",
-    "Rainie",
-    "sider",
-    "Tagify",
-    "unocss",
-    "unplugin",
-    "unref",
-    "Vite",
-    "vueuse",
-    "watsonx",
-    "Zhao"
-  ],
-
-  // Enable the ESlint flat config support
-  "eslint.useFlatConfig": true,
-
-  // Disable the default formatter, use eslint instead
-  // "prettier.enable": false,
-  "editor.formatOnSave": false,
-
-  // Auto fix
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
-
-  // Silent the stylistic rules in you IDE, but still auto fix them
-  "eslint.rules.customizations": [
-    { "rule": "style/*", "severity": "off" },
-    { "rule": "format/*", "severity": "off" },
-    { "rule": "*-indent", "severity": "off" },
-    { "rule": "*-spacing", "severity": "off" },
-    { "rule": "*-spaces", "severity": "off" },
-    { "rule": "*-order", "severity": "off" },
-    { "rule": "*-dangle", "severity": "off" },
-    { "rule": "*-newline", "severity": "off" },
-    { "rule": "*quotes", "severity": "off" },
-    { "rule": "*semi", "severity": "off" }
-  ],
-
-  // Enable eslint for all supported languages
+  "editor.formatOnSave": false,
   "eslint.validate": [
+    "html",
+    "css",
+    "scss",
+    "json",
+    "jsonc",
     "javascript",
     "javascriptreact",
     "typescript",
     "typescriptreact",
-    "vue",
-    "html",
-    "markdown",
-    "json",
-    "jsonc",
-    "yaml",
-    "toml",
-    "astro"
+    "vue"
   ],
-  "i18n-ally.localesPaths": ["locales"],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.displayLanguage": "zh-cn",
+  "i18n-ally.enabledParsers": ["ts"],
+  "i18n-ally.enabledFrameworks": ["vue"],
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": ["src/locales/langs"],
+  "i18n-ally.parsers.typescript.compilerOptions": {
+    "moduleResolution": "node"
+  },
+  "prettier.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "unocss.root": ["./"]
 }

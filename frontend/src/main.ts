@@ -1,50 +1,31 @@
-import type { UserModule } from './shared/typings/app.d'
-import pc from 'picocolors'
-import { createApp } from 'vue'
-import App from './App.vue'
-import { router, setupRouter } from './router'
+import { createApp } from 'vue';
+import './plugins/assets';
+import { setupAppVersionNotification, setupDayjs, setupIconifyOffline, setupLoading, setupNProgress } from './plugins';
+import { setupStore } from './store';
+import { setupRouter } from './router';
+import { setupI18n } from './locales';
+import App from './App.vue';
 
-import '@unocss/reset/tailwind.css'
-import '@/assets/styles/main.scss'
-import 'virtual:uno.css'
+async function setupApp() {
+  setupLoading();
 
-async function bootstrap() {
-  console.log(pc.bgGreen(pc.red(' DevTeam ')) + pc.bgMagenta(pc.white(' Showy ')))
+  setupNProgress();
 
-  // Create a new Vue application instance
-  // 创建一个新的 Vue 应用实例
-  const app = createApp(App)
+  setupIconifyOffline();
 
-  // Install all modules from the `modules/` directory
-  // 安装目录`modules/`下的所有模块
-  Object.values(import.meta.glob<{ install: UserModule }>('./modules/*.ts', { eager: true })).forEach(
-    async i => await i.install?.(app),
-  )
+  setupDayjs();
 
-  // Set up the router 挂载路由
-  await setupRouter(app)
+  const app = createApp(App);
 
-  // Wait for the router to be ready before mounting the app
-  // 路由准备就绪后挂载 APP 实例
-  // https://router.vuejs.org/api/interfaces/Router.html#isReady
-  await router.isReady()
+  setupStore(app);
 
-  // Prevent external styles from overriding naive-ui component styles
-  // 防止外部样式覆盖naive-ui组件样式
-  // https://www.naiveui.com/zh-CN/os-theme/docs/style-conflict
-  const meta = document.createElement('meta')
-  meta.name = 'naive-ui-style'
-  document.head.appendChild(meta)
+  await setupRouter(app);
 
-  // Remove the loading effect after the app is mounted
-  // 应用挂载后移除加载效果
-  app.mount('#app').$nextTick(() => {
-    const loadingElement = document.getElementById('loading')
-    if (loadingElement) {
-      loadingElement.style.display = 'none'
-    }
-  })
+  setupI18n(app);
+
+  setupAppVersionNotification();
+
+  app.mount('#app');
 }
 
-// Setup App 启动应用
-bootstrap()
+setupApp();
