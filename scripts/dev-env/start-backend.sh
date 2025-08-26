@@ -12,10 +12,15 @@ export PGDATA="$PWD/../.dev_pg"
 export PGHOST="localhost"
 export PGPORT=5432
 export POSTGRES_DB="essaycoach"
-export POSTGRES_USER="postgres"
-export POSTGRES_PASSWORD="postgres"
+POSTGRES_SUPERUSER="postgres"
+POSTGRES_SUPERPASS="postgres"
+# Use postgres as the app DB user for simplicity
+APP_DB_USER="postgres"
+APP_DB_PASS="postgres"
 export POSTGRES_HOST="localhost"
 export POSTGRES_PORT="5432"
+export POSTGRES_USER="${APP_DB_USER}"
+export POSTGRES_PASSWORD="${APP_DB_PASS}"
 
 # Ensure socket directory exists
 mkdir -p "$PWD/../.pg_socket"
@@ -47,23 +52,28 @@ start_postgres() {
     fi
     
     echo "[dev-pg] PostgreSQL started successfully"
+}
+
+# Function to ensure proper database setup and ownership
+ensure_database_setup() {
+    echo "[dev-pg] Ensuring database setup..."
     
-    # Create database if it doesn't exist (using postgres superuser)
-    psql -U postgres -p "$PGPORT" -h "$PGHOST" -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB'" | grep -q 1 || \
-        psql -U postgres -p "$PGPORT" -h "$PGHOST" -c "CREATE DATABASE $POSTGRES_DB OWNER postgres;" >/dev/null
-    
-    echo "[dev-pg] Database '$POSTGRES_DB' with postgres superuser is ready"
-    
+    # Create database if it doesn't exist (postgres user already exists as superuser)
+    psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB'" | grep -q 1 || \
+        psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -c "CREATE DATABASE $POSTGRES_DB OWNER $POSTGRES_SUPERUSER;" >/dev/null
+
     # Load schema if database is empty
-    if ! psql -U "$POSTGRES_USER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -tc "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1;" 2>/dev/null | grep -q 1; then
+    if ! psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -tc "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' LIMIT 1;" 2>/dev/null | grep -q 1; then
         echo "[dev-pg] Loading database schema..."
-        if psql -U postgres -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -f "$PWD/../docker/db/init/00_init.sql" >/dev/null 2>&1; then
+        if psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -f "$PWD/../docker/db/init/00_init.sql" >/dev/null 2>&1; then
             echo "[dev-pg] Schema loaded successfully"
-            if psql -U postgres -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -f "$PWD/../docker/db/init/01_add_data.sql" >/dev/null 2>&1; then
+            if psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -f "$PWD/../docker/db/init/01_add_data.sql" >/dev/null 2>&1; then
                 echo "[dev-pg] Mock data loaded successfully"
             fi
         fi
     fi
+    
+    echo "[dev-pg] Database setup complete"
 }
 
 # Check and start PostgreSQL if needed
@@ -77,12 +87,13 @@ else
     echo "[dev-pg] PostgreSQL is already running"
 fi
 
-# Wait for PostgreSQL to be ready
+# Always ensure proper database setup regardless of whether we started PG or not
+ensure_database_setup# Wait for PostgreSQL to be ready
 echo "[dev-pg] Waiting for PostgreSQL to be ready..."
 max_attempts=30
 attempt=1
 while [ $attempt -le $max_attempts ]; do
-    if psql -U "$POSTGRES_USER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -c "SELECT 1;" >/dev/null 2>&1; then
+    if psql -U "$POSTGRES_SUPERUSER" -p "$PGPORT" -h "$PGHOST" -d "$POSTGRES_DB" -c "SELECT 1;" >/dev/null 2>&1; then
         echo "[dev-pg] PostgreSQL is ready"
         break
     fi

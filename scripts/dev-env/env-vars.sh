@@ -5,4 +5,6 @@
 export PYTHONPATH="$PWD:$PYTHONPATH"
 export DJANGO_SETTINGS_MODULE="essay_coach.settings"
 export DJANGO_SECRET_KEY="dev-secret-key-change-in-production"
-export DATABASE_URL="postgresql://essayadmin:changeme@localhost:$PGPORT/essaycoach"
+# Use postgres superuser for development simplicity
+export PGPORT=${PGPORT:-5432}
+export DATABASE_URL="postgresql://postgres:postgres@localhost:${PGPORT}/essaycoach"

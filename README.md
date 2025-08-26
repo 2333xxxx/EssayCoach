@@ -149,8 +149,8 @@ python manage.py createsuperuser  # Create admin user
 ## Database
 - **PostgreSQL** is automatically configured in the nix environment
   - Starts on port 5432 with schema and mock data pre-loaded
-  - Database: `essaycoach` with user `essayadmin` (password: `changeme`)
-  - Environment variable: `DATABASE_URL=postgresql://essayadmin:changeme@localhost:5432/essaycoach`
+  - Database: `essaycoach` with user `postgres` (superuser for development)
+  - Environment variable: `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/essaycoach`
 - **SQLite** can be used for quick prototyping (see `.gitignore` for ignored files).
 
 ---
