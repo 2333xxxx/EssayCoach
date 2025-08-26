@@ -88,7 +88,9 @@ else
 fi
 
 # Always ensure proper database setup regardless of whether we started PG or not
-ensure_database_setup# Wait for PostgreSQL to be ready
+ensure_database_setup
+
+# Wait for PostgreSQL to be ready
 echo "[dev-pg] Waiting for PostgreSQL to be ready..."
 max_attempts=30
 attempt=1
@@ -110,6 +112,10 @@ fi
 # Test if Django is available in the current environment
 if python -c "import django; print(f'Django {django.get_version()} found')" 2>/dev/null; then
     echo "Django is available, running migrations and starting server..."
+    
+    # Create migrations for any model changes
+    echo "Creating new migrations if needed..."
+    python manage.py makemigrations --noinput
     
     # Run database migrations
     echo "Running Django migrations..."
