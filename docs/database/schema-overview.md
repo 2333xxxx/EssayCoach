@@ -2,7 +2,7 @@
 
 ## 📊 Schema Overview
 
-The EssayCoach database is designed as a normalized PostgreSQL schema supporting essay submissions, AI feedback, user management, and educational analytics.
+The EssayCoach database is designed as a normalized PostgreSQL schema supporting essay submissions, AI feedback, user management, and educational analytics. The development environment uses the PostgreSQL superuser for simplified setup and management.
 
 Note that some fileds under user table is not shown here, since the image is not updated yet! But this is enough to give a overview of the project.
 ## 🗂️ Database Schema Diagram

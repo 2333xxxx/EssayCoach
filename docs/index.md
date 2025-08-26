@@ -65,4 +65,5 @@ This documentation is organized for developers and contributors:
 - [GitHub Repository](https://github.com/your-org/EssayCoach)
 - [System Architecture](architecture/system-architecture.md)
 - [Database Design](database/schema-overview.md)
+- [Database Configuration](database/configuration.md)
 - [API Documentation](api/rest-endpoints.md)

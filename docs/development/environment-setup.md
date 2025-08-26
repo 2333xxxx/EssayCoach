@@ -51,8 +51,8 @@ direnv allow
 nix develop --command dev-up
 
 # This will:
-# 1. Start PostgreSQL service
-# 2. Create database and user
+# 1. Start PostgreSQL service with postgres superuser
+# 2. Create database 'essaycoach' owned by postgres superuser
 # 3. Run Django migrations
 # 4. Load sample data
 ```
@@ -129,12 +129,12 @@ docker-compose down
 ### Development Defaults
 ```bash
 # Database
-DATABASE_URL=postgresql://essaycoach:password@localhost:5432/essaycoach_dev
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/essaycoach
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-POSTGRES_DB=essaycoach_dev
-POSTGRES_USER=essaycoach
-POSTGRES_PASSWORD=password
+POSTGRES_DB=essaycoach
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 
 # Redis (for caching and async tasks)
 REDIS_URL=redis://localhost:6379
