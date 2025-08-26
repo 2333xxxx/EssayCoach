@@ -43,10 +43,16 @@ CREATE TABLE public."user" (
 	user_id integer NOT NULL,
 	user_fname varchar(20),
 	user_lname varchar(20),
-	user_email varchar(50),
+	user_email varchar(254),
 	user_role varchar(10),
 	user_status varchar(15),
 	user_credential varchar(255),
+	-- Django-compatible columns
+	is_superuser boolean NOT NULL DEFAULT false,
+	is_staff boolean NOT NULL DEFAULT false,
+	is_active boolean NOT NULL DEFAULT true,
+	last_login timestamp NULL,
+	date_joined timestamp NOT NULL DEFAULT now(),
 	CONSTRAINT user_pk PRIMARY KEY (user_id),
 	CONSTRAINT user_email_uq UNIQUE (user_email),
 	CONSTRAINT user_role_ck CHECK (user_role IN ('student', 'lecturer', 'admin')),
@@ -237,6 +243,49 @@ COMMENT ON COLUMN public.task.task_id IS 'Unique identifier for task.';
 COMMENT ON COLUMN public.task.task_publish_datetime IS 'time/date when the task is published';
 -- ddl-end --
 COMMENT ON COLUMN public.task.task_due_datetime IS 'time/date when the task is due';
+-- ddl-end --
+
+-- ========================================
+-- Django auth M2M tables for custom user
+-- ========================================
+-- Note: We create these early without FK to auth tables because
+-- Django migrations will create auth_group/auth_permission later.
+-- We keep a FK to our user table and ensure uniqueness.
+
+-- object: public.core_user_groups | type: TABLE --
+-- DROP TABLE IF EXISTS public.core_user_groups CASCADE;
+CREATE TABLE public.core_user_groups (
+    id bigserial PRIMARY KEY,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL,
+    CONSTRAINT core_user_groups_user_fk FOREIGN KEY (user_id)
+        REFERENCES public."user" (user_id) MATCH FULL
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT core_user_groups_user_group_uq UNIQUE (user_id, group_id)
+);
+-- ddl-end --
+COMMENT ON TABLE public.core_user_groups IS 'M2M: core.User ↔ auth_group';
+-- ddl-end --
+CREATE INDEX IF NOT EXISTS core_user_groups_user_idx ON public.core_user_groups (user_id);
+CREATE INDEX IF NOT EXISTS core_user_groups_group_idx ON public.core_user_groups (group_id);
+-- ddl-end --
+
+-- object: public.core_user_user_permissions | type: TABLE --
+-- DROP TABLE IF EXISTS public.core_user_user_permissions CASCADE;
+CREATE TABLE public.core_user_user_permissions (
+    id bigserial PRIMARY KEY,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL,
+    CONSTRAINT core_user_user_permissions_user_fk FOREIGN KEY (user_id)
+        REFERENCES public."user" (user_id) MATCH FULL
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT core_user_user_permissions_uq UNIQUE (user_id, permission_id)
+);
+-- ddl-end --
+COMMENT ON TABLE public.core_user_user_permissions IS 'M2M: core.User ↔ auth_permission';
+-- ddl-end --
+CREATE INDEX IF NOT EXISTS core_user_user_permissions_user_idx ON public.core_user_user_permissions (user_id);
+CREATE INDEX IF NOT EXISTS core_user_user_permissions_perm_idx ON public.core_user_user_permissions (permission_id);
 -- ddl-end --
 ALTER TABLE public.task OWNER TO postgres;
 -- ddl-end --
@@ -515,5 +564,3 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ALTER TABLE public.feedback_item DROP CONSTRAINT IF EXISTS feedback_id_rubric_item_id_uq CASCADE;
 ALTER TABLE public.feedback_item ADD CONSTRAINT feedback_id_rubric_item_id_uq UNIQUE (feedback_id_feedback,rubric_item_id_rubric_item);
 -- ddl-end --
-
-

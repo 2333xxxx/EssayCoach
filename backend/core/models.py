@@ -19,6 +19,8 @@ class Class(models.Model):
         managed = False
         db_table = 'class'
         db_table_comment = 'A table for class entity'
+        verbose_name = 'class'
+        verbose_name_plural = 'classes'
 
 
 class Enrollment(models.Model):
@@ -177,9 +179,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CoreUserManager()
 
     USERNAME_FIELD = 'user_email'
+    EMAIL_FIELD = 'user_email'
     REQUIRED_FIELDS = []
 
     class Meta:
         db_table = 'user'
         managed = False
         db_table_comment = 'A table for all user entities, including student, teacher, and admins.'
+
+    def __str__(self):
+        if self.user_fname or self.user_lname:
+            return f"{self.user_fname or ''} {self.user_lname or ''} <{self.user_email}>".strip()
+        return self.user_email
+
+    def get_full_name(self):
+        return f"{self.user_fname or ''} {self.user_lname or ''}".strip()
+
+    def get_short_name(self):
+        return self.user_fname or self.user_email
