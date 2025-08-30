@@ -54,7 +54,8 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # Overmind aliases for easy development
-alias dev='env overmind start'
-alias dev-stop='overmind kill'
-alias dev-restart='overmind restart'
+# Use a wrapper to clean stale sockets and sessions automatically
+alias dev='bash scripts/dev-env/dev-start.sh'
+alias dev-stop='overmind kill || true'
+alias dev-restart='dev-stop && dev'
 alias dev-logs='overmind connect'

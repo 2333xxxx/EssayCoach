@@ -1,5 +1,0 @@
-export const APP_STORE_VERSION = 'app-store-version'
-export const APP_DARK_SCHEME_KEY = 'app-dark-scheme'
-export const APP_LOCALE_KEY = 'app-locale-setting'
-export const APP_MENU_KEY = 'app-menu-setting'
-export const APP_THEME_OVERRIDE_KEY = 'app-theme-override-setting'
