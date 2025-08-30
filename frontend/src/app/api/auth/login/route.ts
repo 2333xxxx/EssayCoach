@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const res = NextResponse.json({ access, refresh, user });
     // Set HttpOnly cookies for mock tokens and user context
     res.cookies.set('access_token', access, {
-      httpOnly: true,
+      httpOnly: false, // use presence of a non-HttpOnly mirror for demo
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 // 1 hour
@@ -62,5 +62,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Invalid JSON' }, { status: 400 });
   }
 }
-
-
