@@ -145,7 +145,7 @@ DJANGO_SECRET_KEY=dev-secret-key-change-in-production
 DEBUG=True
 
 # Frontend
-VITE_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
 ## 🚀 Quick Start Commands
@@ -225,8 +225,8 @@ python backend/manage.py dbshell
 ```
 
 ### Frontend DevTools
-- Vue DevTools browser extension
-- Vite HMR (Hot Module Replacement)
+- React DevTools browser extension
+- Next.js Fast Refresh
 - Source maps enabled in development
 
 ## 🔧 Troubleshooting

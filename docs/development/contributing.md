@@ -48,8 +48,8 @@ docs(api): update endpoint documentation
 
 ### TypeScript (Frontend)
 - Use strict mode
-- Prefer composition API
-- Follow Vue style guide
+- Prefer functional components and React hooks
+- Follow Next.js and React style guides
 - Run `eslint` and `prettier`
 
 ### Testing Requirements
