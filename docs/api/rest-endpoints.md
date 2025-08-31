@@ -35,10 +35,110 @@ Authenticate a user and return access and refresh tokens.
   "data": {
     "access": "...",
     "refresh": "...",
-    "user": {
-      "id": 1,
-      "email": "user@example.com"
-    }
+  }
+}
+```
+
+**Error Responses**
+
+When credentials are invalid:
+**Response** `401 Unauthorized`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_CREDENTIALS",
+    "message": "Invalid email or password"
+  }
+}
+```
+
+When account is suspended:
+**Response** `423 Locked`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ACCOUNT_LOCKED",
+    "message": "Account is locked due to multiple failed attempts. Try again later."
+  }
+}
+```
+
+When input is invalid:
+**Response** `400 Bad Request`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_INPUT",
+    "message": "Invalid email format or missing password"
+  }
+}
+```
+
+When server error occurs:
+**Response** `500 Internal Server Error`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "SERVER_ERROR",
+    "message": "Internal server error. Please try again later."
+  }
+}
+```
+
+### POST /api/v1/auth/register
+Register a new user and return access and refresh tokens.
+
+**Request**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "securePassword",
+}
+```
+
+**Response** `201 Created`
+
+```json
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "access": "...",
+    "refresh": "...",
+  }
+}
+```
+When email is already taken:
+**Response** `409 Conflict`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "EMAIL_TAKEN",
+    "message": "Email is already registered"
+  }
+}
+```
+
+When email is non-existent:
+**Response** `404 Not Found`
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "EMAIL_NOT_FOUND",
+    "message": "Email is not registered"
   }
 }
 ```
@@ -67,7 +167,7 @@ Exchange a refresh token for a new access token.
 
 ## Users
 
-### GET /api/v1/users/me
+### GET /api/v1/users/info
 Retrieve the current user's profile.
 
 **Response** `200 OK`
@@ -85,7 +185,7 @@ Retrieve the current user's profile.
 }
 ```
 
-### PATCH /api/v1/users/me
+### PATCH /api/v1/users/info
 Update selected profile fields for the current user.
 
 **Request**
