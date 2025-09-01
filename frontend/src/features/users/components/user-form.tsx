@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -17,6 +15,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+type UserRoleType = 'student' | 'lecturer' | 'admin';
+type UserStatusType = 'active' | 'unregistered' | 'suspended';
+
 const formSchema = z.object({
   firstName: z.string().min(2, { message: 'First name must be at least 2 characters.' }),
   lastName: z.string().min(2, { message: 'Last name must be at least 2 characters.' }),
@@ -30,8 +31,8 @@ export default function UserForm({ initialData, pageTitle }: { initialData: User
     firstName: initialData?.firstName || '',
     lastName: initialData?.lastName || '',
     email: initialData?.email || '',
-    role: (initialData?.role ?? 'student') as 'student' | 'lecturer' | 'admin',
-    status: (initialData?.status ?? 'unregistered') as 'active' | 'unregistered' | 'suspended'
+    role: (initialData?.role as UserRoleType) ?? 'student',
+    status: (initialData?.status as UserStatusType) ?? 'unregistered'
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
